@@ -12,8 +12,8 @@ instructions below to submit homework.
 and run the script `scripts/update.sh` (replace `YourGitHubUsername`
 with your GitHub username):
 ```
-repo="assignments-2016-YourGitHubUsername.git"
-git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}
+repo="assignments-2016-YourGitHubUsername"
+git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}.git
 cd ${repo}
 bash ./scripts/update.sh 
 ```
