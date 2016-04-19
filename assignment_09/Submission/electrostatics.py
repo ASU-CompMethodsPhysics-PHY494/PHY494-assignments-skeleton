@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def set_boundaries(Phi, w=50, d=10, b=10, r=20, voltage=100, verbose=False):
+def set_boundaries(Phi, w=50, d=10, b=10, r=10, voltage=100, verbose=False):
     raise NotImplementedError
 
     return Phi
@@ -40,20 +40,20 @@ def calculate_potential(Nmax=140, Max_iter=30000, tol=1e-6):
     """
 
     raise NotImplementedError
-    
+
     return Phi
 
 def calculate_chargedensity(Phi, Delta=1.0):
     """Calculate the charge density from Poisson's equation."""
     raise NotImplementedError
-    
+
 
 def Laplace_Gauss_Seidel_odd_even(Phi):
     """One update in the Gauss-Seidel algorithm on odd or even fields"""
     # odd update (uses old even)
     Phi[1:-2:2, 1:-2:2] = 0.25*(Phi[2::2, 1:-2:2] + Phi[0:-2:2, 1:-2:2] + Phi[1:-2:2, 2::2] + Phi[1:-2:2, 0:-2:2])
     Phi[2:-1:2, 2:-1:2] = 0.25*(Phi[3::2, 2:-1:2] + Phi[1:-2:2, 2:-1:2] + Phi[2:-1:2, 3::2] + Phi[2:-1:2, 1:-2:2])
-    
+
     # even update (uses new odd)
     Phi[1:-2:2, 2:-1:2] = 0.25*(Phi[2::2, 2:-1:2] + Phi[0:-2:2, 2:-1:2] + Phi[1:-2:2, 3::2] + Phi[1:-2:2, 1:-1:2])
     Phi[2:-1:2, 1:-2:2] = 0.25*(Phi[3::2, 1:-2:2] + Phi[1:-2:2, 1:-2:2] + Phi[2:-1:2, 2::2] + Phi[2:-1:2, 0:-2:2])
@@ -95,14 +95,14 @@ def plot_panel(Phi, figname="electrostatics_potential_2d.pdf"):
 
 def plot_contour(Phi, filename=None):
     """Plot Phi as a contour plot.
-    
+
     Arguments
     ---------
     Phi : 2D array
           potential on lattice
     filename : string or None, optional (default: None)
           If `None` then show the figure and return the axes object.
-          If a string is given (like "contour.png") it will only plot 
+          If a string is given (like "contour.png") it will only plot
           to the filename and close the figure but return the filename.
     """
     fig = plt.figure(figsize=(5,4))
@@ -119,27 +119,27 @@ def plot_contour(Phi, filename=None):
 
     cb = fig.colorbar(cset, shrink=0.5, aspect=5)
     cb.set_label(r"potential $\Phi$ (V)")
-    
+
     if filename:
         fig.savefig(filename)
         plt.close(fig)
         return filename
     else:
         return ax
-    
+
 
 def plot_surf(Phi, filename=None, offset=-20, zlabel=r'potential $\Phi$ (V)',
               elevation=40, azimuth=20,
               rstride=2, cstride=2):
     """Plot Phi as a 3D plot with contour plot underneath.
-    
+
     Arguments
     ---------
     Phi : 2D array
           potential on lattice
     filename : string or None, optional (default: None)
           If `None` then show the figure and return the axes object.
-          If a string is given (like "contour.png") it will only plot 
+          If a string is given (like "contour.png") it will only plot
           to the filename and close the figure but return the filename.
     offset : float, optional (default: 20)
           position the 2D contour plot by offset along the Z direction
@@ -153,12 +153,12 @@ def plot_surf(Phi, filename=None, offset=-20, zlabel=r'potential $\Phi$ (V)',
     rstride, cstride : int, optional
           strides for the wireframe/surface plots
     """
-     
+
     x = np.arange(Phi.shape[0])
     y = np.arange(Phi.shape[1])
     X, Y = np.meshgrid(x, y)
     Z = Phi[X, Y]
-    
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     surf = ax.plot_surface(X, Y, Z, cmap=plt.cm.coolwarm,
@@ -170,12 +170,12 @@ def plot_surf(Phi, filename=None, offset=-20, zlabel=r'potential $\Phi$ (V)',
     ax.set_ylabel('Y')
     ax.set_zlabel(zlabel)
     ax.set_zlim(offset + Z.min(), Z.max())
-    
+
     ax.view_init(elev=elevation, azim=azimuth)
 
     cb = fig.colorbar(surf, shrink=0.5, aspect=5)
     cb.set_label(zlabel)
-    
+
     if filename:
         fig.savefig(filename)
         plt.close(fig)
@@ -193,7 +193,7 @@ def plot_chargedensity(rho, filename=None, **kwargs):
           charge density
     filename : string or None, optional (default: None)
           If `None` then show the figure and return the axes object.
-          If a string is given (like "contour.png") it will only plot 
+          If a string is given (like "contour.png") it will only plot
           to the filename and close the figure but return the filename.
     vmin, vmax : float, optional
           lowest and highest charge density value to be shown
@@ -205,7 +205,7 @@ def plot_chargedensity(rho, filename=None, **kwargs):
                     cmap=plt.cm.coolwarm, interpolation="nearest",
                     **kwargs)
     ax.set_xlabel('X')
-    ax.set_ylabel('Y')    
+    ax.set_ylabel('Y')
     cb = fig.colorbar(img, extend="both", extendrect=False)
     cb.set_label(r"charge density $\rho$")
 

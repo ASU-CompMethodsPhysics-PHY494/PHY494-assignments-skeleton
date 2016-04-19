@@ -1,4 +1,4 @@
-# tests for HW08 solution
+# tests for HW09 solution
 
 import numpy as np
 
@@ -72,18 +72,18 @@ class TestBoundaryConditions(object):
 
     def test_hole(self):
         assert_equal(np.sum(self.Phi0[55:85, :] != 0), 400)
-        assert_equal(np.sum(self.Phi0[65:75, 70:] != 0), 0)        
+        assert_equal(np.sum(self.Phi0[65:75, 70:] != 0), 0)
 
 class TestChargedensity(object):
     def setUp(self, Nmax=NMAX, Max_iter=30000, tol=TOL):
         self.Phi = electrostatics.calculate_potential(
             Nmax=Nmax, Max_iter=Max_iter, tol=tol)
         self.Delta = 1.0
-        
+
     def test_chargedensity(self):
         rho = electrostatics.calculate_chargedensity(self.Phi, Delta=self.Delta)
         assert_almost_equal(rho.sum(), 3.8189203316939451, decimal=5)
         assert_almost_equal(rho.max(), 11.448452396998144, decimal=5)
-        assert_almost_equal(rho.min(), -12.775747943406886, decimal=5)        
-        
-    
+        assert_almost_equal(rho.min(), -12.775747943406886, decimal=5)
+
+
