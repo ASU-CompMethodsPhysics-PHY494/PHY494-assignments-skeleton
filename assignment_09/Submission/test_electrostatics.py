@@ -21,7 +21,7 @@ def test_run_long(Nmax=NMAX, Max_iter=30000, tol=TOL):
         Nmax=Nmax, Max_iter=Max_iter, tol=tol)
     assert_almost_equal(Phi.min(), -100)
     assert_almost_equal(Phi.max(), 100)
-    assert_almost_equal(np.trace(Phi), 1211.2044887186539,
+    assert_almost_equal(np.trace(Phi), 535.78614641692775,
                         decimal=5)
 
 def test_run_short(Nmax=NMAX, Max_iter=1000, tol=1):
@@ -29,7 +29,7 @@ def test_run_short(Nmax=NMAX, Max_iter=1000, tol=1):
         Nmax=Nmax, Max_iter=Max_iter, tol=tol)
     assert_almost_equal(Phi.min(), -100)
     assert_almost_equal(Phi.max(), 100)
-    assert_almost_equal(np.trace(Phi), 1141.5704932189408,
+    assert_almost_equal(np.trace(Phi), 539.21017867137766,
                         decimal=0)
 
 class TestBoundaryConditions(object):
@@ -82,8 +82,8 @@ class TestChargedensity(object):
 
     def test_chargedensity(self):
         rho = electrostatics.calculate_chargedensity(self.Phi, Delta=self.Delta)
-        assert_almost_equal(rho.sum(), 3.8189203316939451, decimal=5)
-        assert_almost_equal(rho.max(), 11.448452396998144, decimal=5)
-        assert_almost_equal(rho.min(), -12.775747943406886, decimal=5)
+        assert_almost_equal(rho.sum(), 0.97628402216032451, decimal=5)
+        assert_almost_equal(rho.max(), 4.8221860561469656, decimal=5)
+        assert_almost_equal(rho.min(), -5.3301631916019678, decimal=5)
 
 
