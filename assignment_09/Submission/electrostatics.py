@@ -60,7 +60,43 @@ def Laplace_Gauss_Seidel_odd_even(Phi):
     return Phi
 
 
+def plot_phi(Phi, figname="electrostatics_potential_3d.pdf",
+             rstride=2, cstride=2):
+    """Plot the potential `Phi`."""
+    nx, ny = Phi.shape
+    x = np.arange(nx)
+    y = np.arange(ny)
+    X, Y = np.meshgrid(x, y)
+    Z = Phi[X, Y]
+    offset = Phi.min() - 0.3*(Phi.max() - Phi.min())
 
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_surface(X, Y, Z, cmap=plt.cm.coolwarm,
+                           rstride=rstride, cstride=cstride,
+                           alpha=0.3)
+    cset = ax.contour(X, Y, Z, 20, zdir='z', offset=offset,
+                      cmap=plt.cm.coolwarm)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel(r'potential $\Phi$ (V)')
+    ax.set_zlim(offset, Phi.max())
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+
+    if figname:
+        fig.savefig(figname)
+        print("Wrote 3D figure to {}".format(figname))
+
+    return fig
+
+def get_XYZ(Phi, x0=0, y0=0, dx=1, dy=1):
+    """Convert Phi to X, Y, Z = Phi[X, Y] suitable for surface plotting."""
+    nx, ny = Phi.shape
+    x = np.arange(nx)
+    y = np.arange(ny)
+    X, Y = np.meshgrid(x, y)
+    Z = Phi[X, Y]
+    return x0 + X*dx, y0 + Y*dy, Z
 
 def plot_panel(Phi, figname="electrostatics_potential_2d.pdf"):
     """Plot a panel with 2d plots of initial potential and final solution Phi"""
