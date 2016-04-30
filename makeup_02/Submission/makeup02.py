@@ -58,18 +58,18 @@ def T_diurnal(t, Tmin, Tmax, t_max=12*3600):
 def CrankNicholson_T(L=0.3, t_max=3*24*3600, Dx=0.02, Dt=60,
                      step=30, verbose=True,
                      Kappa=1.0, CHeat=0.9e3, rho=2e3,
-                     T0=273+20, Tmin=273+15, Tmax=273+40):
+                     Tin=293, Tmin=301.4, Tmax=314.1):
     """Solve the 1d heat equation for a daily oscillating temperature variation.
 
     The left end of the material is oscillating (see
-    :func:`T_diurnal`), the right end is held constant at `T0`.
+    :func:`T_diurnal`), the right end is held constant at `Tin`.
 
     The heat equation is solved with the Crank-Nicholson algorithm so
     any combinations of `Dx` and `Dt` can be used.
 
     Some Arguments
     --------------
-    T0 : float
+    Tin : float
         constant T at right end
     Tmin, Tmax : float
         min and max T in the diurnal temperature cycle
