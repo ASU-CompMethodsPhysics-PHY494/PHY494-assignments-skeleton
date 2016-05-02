@@ -1,10 +1,12 @@
 # tests for makeup02
 
+import os.path
 import numpy as np
 
 from numpy.testing import (assert_array_almost_equal, assert_equal,
                            assert_array_equal,
                            assert_almost_equal,
+                           assert_,
                            )
 
 import makeup02
@@ -41,6 +43,7 @@ class TestCrankNicholson_T(object):
             Tin=293, Tmin=self.Tmin, Tmax=self.Tmax,
             L=0.3, t_max=self.t_max,
             Kappa=1.0, CHeat=0.9e3, rho=2e3)
+        self.figname = "heatequation_3d.pdf"
 
     def test_parameters(self):
         assert_array_almost_equal(self.parameters, (0.005, 30, 30))
@@ -64,4 +67,13 @@ class TestCrankNicholson_T(object):
         assert_almost_equal(self.T_plot.sum(), 5116598.6083793771,
                             decimal=4)
 
+    def test_figure_pdf(self):
+        try:
+            if not os.path.exists(self.figname):
+                # generate plot on the fly for convenience
+                makeup02.plot_surface(*self.parameters, figname=self.figname)
+        except:
+            pass
+        assert_(os.path.exists(self.figname),
+                "Figure {} is missing.".format(self.figname))
 
