@@ -1,4 +1,4 @@
-# Solution ASU PHY494 Makeup02
+# ASU PHY494 Makeup02
 #
 # Copyright (c) 2016 Oliver Beckstein
 # All rights reserved.

@@ -64,14 +64,15 @@ class TestCrankNicholson_T(object):
         assert_array_equal(self.T_plot.shape, (289, 59))
 
     def test_solution(self):
-        assert_almost_equal(self.T_plot.sum(), 5116598.6083793771,
+        assert_almost_equal(self.T_plot.sum(), 5116599.9475197177,
                             decimal=4)
 
     def test_figure_pdf(self):
         try:
             if not os.path.exists(self.figname):
                 # generate plot on the fly for convenience
-                makeup02.plot_surface(*self.parameters, figname=self.figname)
+                makeup02.plot_surface(self.T_plot,
+                                      *self.parameters, figname=self.figname)
         except:
             pass
         assert_(os.path.exists(self.figname),
