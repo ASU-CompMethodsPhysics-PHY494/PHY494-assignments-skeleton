@@ -114,8 +114,8 @@ def CrankNicholson_T(L=0.3, t_max=3*24*3600, Dx=0.02, Dt=60,
         # set up RHS
         bT[:] = T[:-2] + beta*T[1:-1] + T[2:]
         # boundaries are special cases
-        bT[0] += T[0]  #  + T[0,j+1]
-        bT[-1] += T[-1] #  + T[-1,j+1]
+        bT[0] += T[0]  #  + T[0,j+1]    CHECK THAT THIS IS CORRECT
+        bT[-1] += T[-1] #  + T[-1,j+1]  CHECK THAT THIS IS CORRECT
 
         # solve implicit problem
         T[1:-1] = scipy.linalg.solve_banded((1, 1), M_eta_ab, bT)
