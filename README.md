@@ -18,23 +18,39 @@ cd ${repo}
 bash ./scripts/update.sh 
 ```
 
-For each `assignment_NN` it should create three subdirectories
+New homework assignments will be added during the semester. Run
+`update.sh` to get a new assignment:
+```
+repo="assignments-2018-YourGitHubUsername"
+cd ${repo}
+bash ./scripts/update.sh 
+```
+
+For each `assignment_NN` the script should create three subdirectories
 `assignment_??/Submission`, `assignment_??/Grade`, and
 `assignment_??/Work`. (If the script fails, file an issue in the
-[Issue Tracker for PHY494-assignments-skeleton](https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues)
+[Issue Tracker for
+PHY494-assignments-skeleton](https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues)
 and just create the directories manually.
 
-* The **Submission** directory will contain your homework.
+* The **Submission** directory will contain **your homework**.
 * The **Grade** directory will contain comments from the
   TA/instructor.
 * You can use the **Work** directory to store scratch files and
   alternative attempts that should not be graded.
 
 Commit and push a PDF, text file or Jupyter notebook inside the
-**`assignment_NN/Submission`** directory and **name it `hwNN.ipynb` (or
-`hwNN.pdf`)** (where *NN* is the assignment number).  Homeworks must
-be submitted according to the above scheme, be legible and
-intelligible or may otherwise be returned ungraded with 0 points.
+**`assignment_NN/Submission`** directory and **name it `hwNN.ipynb`
+(or `hwNN.pdf`)** (where *NN* is the assignment number).  Follow the
+instructions in each assignment. Homeworks must be submitted according
+to the above scheme, be legible and intelligible, and on time (commit
+date) or may be returned ungraded with 0 points.
+
+* There is also a **tex** directory: it is not relevant for your
+  homework because it contains the
+  [LaTeX](https://www.latex-project.org/) sources that were used to
+  create the assignment PDF file. You may use it to typeset your
+  answer if you like, but you are *not required* to do so.
 
 
 
