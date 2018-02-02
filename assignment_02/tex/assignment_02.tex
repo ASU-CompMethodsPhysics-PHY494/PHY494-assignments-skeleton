@@ -1,0 +1,286 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[colorlinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{minted}
+
+
+%\usepackage{wrapfig}
+\usepackage{subfig}
+\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{2}
+%
+%------------------------------------------------------------
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}}
+\newcommand{\points}[1]{\textbf{[#1 points]}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\fnhref}[2]{\href{#1}{#2}\footnote{\url{#1}}}
+
+\newcommand{\python}[1]{\mintinline{python}{#1}}
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (62 points total)}
+
+\noindent Due Sunday, Jan 28, 2018, 11:59pm.
+
+\noindent Submit a PDF through Blackboard (name it
+\texttt{\emph{lastname}\_\emph{firstname}\_hw\anumber.pdf}).
+Homeworks must be legible or may otherwise be returned ungraded with 0
+points.
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+Note: In general, for full credit you need to (1) show the commands
+that you used and (2) answer the question. Sometimes you should also
+copy and paste output.
+
+\subsection{Python data types (7 points)}
+What is the Python data type of each of the following values?
+\begin{enuma}
+\item \python{3.14515} \points{1}
+\item \python{0} \points{1}
+\item \python{False} \points{1}
+\item \python{'To be or not to be'} \points{1}
+\item \python{[3, 2, 1, "lift off!"]} \points{1}
+\item \python{3, 2, 1, "lift off!"} \points{1}
+\item \python{None} \points{1}
+\item \BONUS \python{{'name': 'Hamlet', 'occupation': 'Prince'}} \bonus{1}
+\end{enuma}
+
+\subsection{Operators (8 points)}
+
+\begin{enuma}
+\item What does the following code output? What are the names of the three
+  mathematical operations that are carried out in lines 4--6? \points{4}
+  \begin{minted}[linenos]{python}
+    a = 5.0
+    b = 10
+    
+    result_1 = a + b
+    result_2 = a / b
+    result_3 = a ** b
+    
+    print(result_1, result_2, result_3)
+  \end{minted}
+\item What error does the following code produce and why? \points{4}
+  \begin{minted}{python}
+    name = 'Hamlet, Prince of Denmark'
+    age = 30
+    print(name + age)
+  \end{minted}
+  % http://www.shakespeare-online.com/plays/hamlet/hamletsage.html
+\end{enuma}
+
+
+\subsection{Python Lists and Strings (20 points)}
+
+Lists and strings share some similarities but also have important
+differences. Let's look at them. (Type code in the Python interpreter
+e.g., \texttt{ipython}).
+
+\begin{minted}{python}
+bag = ["guide", "towel", "tea", 42]
+ga = "Four score and seven years ago"
+\end{minted}
+
+(Note that spaces are shown explicitly in the second string with the
+symbol ``\textvisiblespace''---just type a space.)
+
+\begin{enuma}
+\item How do you have to slice \python{bag} in order to get
+  \python{['towel', 'tea']}? \points{1}
+\item What does \python{bag[::-1]} do?  
+  
+  How do you slice bag in order to get
+  \python{['tea', 'towel']}?  \points{2}
+\item Strings can also be sliced. How do you have to slice \python{ga}
+  to get
+  \begin{itemize}
+  \item   "Four"
+  \item   "seven"
+  \end{itemize}
+  \points{2}
+\item You can access elements of a list in a variety of ways: 
+  \begin{enumi}
+  \item   Explain what
+\begin{minted}{python}
+bag[0] = 'book'
+\end{minted}
+    does? (Hint: print \python{bag}!) \points{1}
+  \item  Create two new variables:
+\begin{minted}{python}
+mybag = bag
+yourbag = bag[:]
+\end{minted}
+    and use them:
+\begin{minted}{python}
+mybag[3] = "mice" 
+yourbag.append("money")
+\end{minted}
+    What is the content of \python{bag}, \python{mybag},
+    \python{yourbag}? \points{2}
+  \item  From your observations, explain how the assignment \python{x = a} differs
+    from \python{y = a[:]}? \points{3}
+  \end{enumi}
+\item  Try
+\begin{minted}{python}
+  ga[:4] = "Three"
+\end{minted}
+  \begin{enumi}
+  \item Describe what happens?\footnote{Note that strings are
+      ``immutable'' objects in Python whereas lists are ``mutable''.}
+    \points{1}
+  \item How would you construct the string \python{"Three score and
+      seven years ago"} from \python{ga} and the string
+    \python{"Three"}? \points{1}
+  \end{enumi}
+\item What do the commands
+\begin{minted}{python}
+ga.split()
+a, b, c = ga.split()[:3]
+list([1,2,3])
+list(ga)
+\end{minted}
+  do? You can show the output but you need to explain in your own
+  words what is happening. \points{4}
+\item Nested lists: Given the list
+\begin{minted}{python}
+bags = [['salt', 'pepper'], ['pen', 'eraser', 'ruler']]
+\end{minted}
+  how do you have to index \python{bags} to get
+
+  \begin{enumi}
+  \item \python{['salt', 'pepper']} \points{1}
+  \item \python{'pepper'} \points{1}
+  \item \python{'ruler'} \points{1}
+  \end{enumi}
+\end{enuma}
+
+\subsection{Very Simple Temperature Calculator (13 points)}
+\label{sec:calculator}
+
+Write a Python program \texttt{addtemperatures.py} that adds a
+temperature difference in Fahrenheit, $\Delta\theta$, to an absolute
+temperature, given in Kelvin, $T$. The program should
+\begin{itemize}
+\item ask the user for two floating point numbers $T$ (absolute
+  temperature in Kelvin) and $\Delta\theta$ (temperature difference in
+  degrees Fahrenheit) as input
+\item print the sum ``$T + \Delta\theta$'' in units of Kelvin (where
+  $\Delta\theta$ must be converted to Kelvin)
+\end{itemize}
+The conversion of an absolute temperature from Fahrenheit to Kelvin is
+(written with numbers $T/\text{K}$ and
+$\theta/^{\circ}\text{F}$)\footnote{We use ``symbol/unit'' to indicate
+a number without the unit so that we can write equations where all
+units correctly balance. For instance, if $T=373$~K then $T/\text{K}$
+is the number 373. This approach is more precise than just saying
+``Take $T$ as the temperature in Kelvin and $\theta$ in Fahrenheit.''}
+\begin{gather}
+  \label{eq:conversion}
+  T/\text{K} = \frac{5}{9}(\theta/\text{$^{\circ}$F} - 32) + 273.15
+\end{gather}
+
+\begin{enuma}
+\item \BONUS Derive an expression for $\Delta T = T_{2} - T_{1}$ as a
+  function of $\Delta \theta = \theta_{2} - \theta_{1}$ (where
+  $T_{2}$, $T_{1}$, $\theta_{2}$, and $\theta_{1}$ are arbitrary and
+  only introduced to make the connection to
+  Eq.~\ref{eq:conversion}). Show that the the difference in Kelvin is
+  5/9-th of the difference in Fahrenheit, \bonus{3}
+  \begin{gather}
+    \label{eq:diff}
+    \Delta T/\text{K} = \frac{5}{9} \Delta \theta/\text{$^{\circ}$F}.
+  \end{gather}
+\item Use your result from the previous problem (i.e.,
+  Eq.~\ref{eq:diff}) to derive a mathematical expression to compute
+  the sum of $T$ and $\Delta\theta$. \points{2}  
+\item Write the \texttt{addtemperatures.py} program and copy and paste
+  the code. \points{7}
+\item Show the complete input and output (copy and paste) for the
+  input $\Delta\theta = 63^{\circ}\text{F}$ and $T =
+  265\,\text{K}$. \points{4}
+\end{enuma}
+
+
+\subsection{Loops (14 points)}
+\begin{enuma}
+\item Use a \python{for} loop to print each element of the list
+  \begin{minted}{python}
+    sentence = ["We", "must", "walk", "before", "we", "can", "run"]
+  \end{minted}
+  Show your code and your output. \points{4}
+\item \BONUS Find a way to only print every other line from
+  \python{sentence}, i.e., the output should read ``We walk we
+  run''. Show your code and your output. \bonus{2}
+\item Use a loop to sum the integers from 1 to 1000 and print the
+  final result (500500). \points{4}
+
+  \noindent\emph{Note}: You can increment a variable \python{total}
+  with a value \python{x} with the assignment
+  \begin{minted}{python}
+    total = total + x
+  \end{minted}
+  or equivalently but more compactly written
+  \begin{minted}{python}
+    total += x
+  \end{minted}
+  Both expressions do the same thing: add two values together and then
+  assign the sum to the variable \python{total}, overwriting the old
+  value of \python{total} in the process.
+\item Write a program that counts down from 10 to 0 and prints each
+  number (``10 9 8 ... 3 2 1'').
+  \begin{enumi}    
+  \item Use a \python{while} loop. \points{3}
+  \item Use a \python{for} loop. \points{3}
+  \end{enumi}
+  (You can use any other Python functions that you might need, such as
+  \python{range}.)
+
+  Show your code and output.
+\end{enuma}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

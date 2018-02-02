@@ -1,0 +1,149 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[colorlinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\lstset{language=sh}
+
+%\usepackage{wrapfig}
+\usepackage{subfig}
+\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{1}
+%
+%------------------------------------------------------------
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}}
+\newcommand{\points}[1]{\textbf{[#1 points]}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\fnhref}[2]{\href{#1}{#2}\footnote{\url{#1}}}
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (15 points total)}
+
+\noindent Due Thursday, Jan 18, 2018, 1:30pm.
+
+\noindent Submit a PDF through Blackboard (name it
+\texttt{\emph{lastname}\_\emph{firstname}\_hw\anumber.pdf}).
+Homeworks must be legible or may otherwise be returned ungraded with 0
+points.
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+Note: In general, for full credit you need to (1) show the commands
+that you used and (2) answer the question. Sometimes you should also
+copy and paste output.
+
+\subsection{Commands and paths (8 points)}
+(The following questions do not require you to show code unless
+explicitly stated.)
+\begin{enuma}
+\item Briefly describe the function of the \texttt{cd} and the
+  \texttt{pwd} command? \points{2}
+\item Show commands for two different ways to change to your home directory,
+  assuming you are currently in the root directory. \points{1.5}
+
+  \BONUS Show a third possibility. \bonus{0.5}
+\item Given the path \texttt{/home/dvader/Documents/../data/bases}:
+  \begin{enumi}
+    \item Is this an absolute or relative path? \points{0.5}
+    \item If you are located in the home directory of user dvader
+      (\texttt{/home/dvader}) then what is the shortest path to
+      \texttt{bases}? \points{1}
+  \end{enumi}
+\item If you were in a directory \texttt{/home/dvader/data} and you
+  executed the command \texttt{cd ./.././.././.}, what would be the
+  output of running the \texttt{pwd} command afterwards? \points{1}
+\item Describe two ways by which you could learn more about the
+  function of a Unix command \texttt{frbzz} that you don't know
+  anything about. \points{2}
+\item \BONUS (Skim)read Neal Stephenson's \emph{In the Beginning was
+  the command line} from 1999
+  (\fnhref{https://becksteinlab.physics.asu.edu/file_download/7/NealStephenson_Commandline.pdf?mimetype=pdf}{PDF})\footnote{originally
+  available from
+  \url{http://www.cryptonomicon.com/beginning.html}}. What are the
+  advantages and disadvantages of using the command line instead of a
+  graphical user interface? \bonus{4}
+\end{enuma}
+
+\subsection{Copy, rename, delete (4 points)}
+
+Work through the
+\fnhref{https://asu-compmethodsphysics-phy494.github.io/ASU-PHY494/2018/01/11/01_Unix_Shell/\#copy-rename-delete}{Copy,
+  rename, delete: Activity} (note that this exercise builds on
+previous parts of
+\fnhref{https://asu-compmethodsphysics-phy494.github.io/ASU-PHY494/2018/01/11/01_Unix_Shell/}{01
+  The Unix Shell}, which you should have also done). After you
+completed the activity (points 1 -- 11) you should end up with a
+specific directory structure under
+\texttt{$\sim$/PHY494/01\_shell}. Show the output of the commands
+\begin{lstlisting}
+  cd ~
+  ls -R PHY494/01_shell
+\end{lstlisting}
+which will be compared against the expected directory structure and
+content. \points{4}
+
+\subsection{Danger Zone (3 points)}
+
+\begin{center}
+  \fbox{\parbox{\textwidth}{\textbf{DO NOT TRY THE FOLLOWING COMMAND JUST
+      TO FIND OUT WHAT IT DOES. You have been warned!}}}
+\end{center}
+\textbf{Describe} what the command \texttt{rm -rf /} might do. Should
+you \emph{ever} use it?
+
+\subsection{BONUS: Pipes and Filters (+5* points)}
+\label{sec:pipesandfilters}
+
+Work through the activities in the section
+\fnhref{https://asu-compmethodsphysics-phy494.github.io/ASU-PHY494/2018/01/11/01_Unix_Shell/\#pipes-and-filters}{Pipes
+  and Filters}. Answer the following questions and show the commands
+that you used to arrive at the answer.
+
+\begin{enuma}
+\item How many lines does the file \texttt{planets\_2.dat} contain? \bonus{1}
+\item What are the three biggest planets (by diameter) in the file
+  \texttt{planets.dat}? \bonus{1}
+\item Which planets contain \emph{ice} terrain? \bonus{1}
+\item \label{li:characters} What is the most frequent and the least
+  frequent first letter amongst \emph{all} the planets? \bonus{2}
+\end{enuma}
+
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
