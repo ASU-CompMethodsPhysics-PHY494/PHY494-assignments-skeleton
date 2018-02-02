@@ -1,0 +1,357 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+% https://tex.stackexchange.com/a/340588
+\usepackage{tikz}
+\usepackage[edges]{forest}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{3}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\anum}{0\anumber}
+
+
+% dir trees from Guilherme Zanotelli
+% https://tex.stackexchange.com/a/340588
+\definecolor{foldercolor}{RGB}{124,166,198}
+
+\tikzset{pics/folder/.style={code={%
+    \node[inner sep=0pt, minimum size=#1](-foldericon){};
+    \node[folder style, inner sep=0pt, minimum width=0.3*#1, minimum height=0.6*#1, above right, xshift=0.05*#1] at (-foldericon.west){};
+    \node[folder style, inner sep=0pt, minimum size=#1] at (-foldericon.center){};}
+    },
+    pics/folder/.default={20pt},
+    folder style/.style={draw=foldercolor!80!black,top color=foldercolor!40,bottom color=foldercolor}
+}
+
+\forestset{is file/.style={edge path'/.expanded={%
+        ([xshift=\forestregister{folder indent}]!u.parent anchor) |- (.child anchor)},
+        inner sep=1pt},
+    this folder size/.style={edge path'/.expanded={%
+        ([xshift=\forestregister{folder indent}]!u.parent anchor) |- (.child anchor) pic[solid]{folder=#1}}, inner xsep=0.6*#1},
+    folder tree indent/.style={before computing xy={l=#1}},
+    folder icons/.style={folder, this folder size=#1, folder tree indent=3*#1},
+    folder icons/.default={12pt},
+}
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (28 points total)}
+
+\noindent Due Friday, Feb 9, 2018, 5pm.
+
+\noindent
+\fbox{\parbox{\linewidth}{Submission is now to your \textbf{private
+      GitHub repository}. Follow the link provided to you by the
+    instructor in order for the repository to be set up: It will have
+    the name
+    \emph{ASU-CompMethodsPhysics-PHY494/assignments-2018-\emph{YourGitHubUsername}}
+    and will only be visible to you and the instructor/TA. Follow the
+    instructions below to submit this (and all future) homework.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{git clone} your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username)
+  \begin{minted}{bash}
+    repo="assignments-2018-YourGitHubUsername.git" 
+    git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}
+  \end{minted}
+\item run the script
+  \texttt{./scripts/update.sh} (replace \emph{YourGitHubUsername} with
+  your GitHub username):
+  \begin{minted}{bash}
+    cd ${repo} 
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2018-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible and on-time or may  be
+returned ungraded with 0 points.
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+\subsection{Version control with Git (9 points)}
+Keep your answers short, one or two sentences should be sufficient for
+questions \ref{li:gitinit}--\ref{li:gitpush}.
+\begin{enuma}
+\item \emph{Briefly} explain what a version control system such as Git
+  does and how it can help you. (For your answer, it is sufficient to
+  focus on three different aspects out of many --- choose the ones
+  that \emph{you} find most important.) \points{3}
+\item \label{li:gitinit}Explain the difference between \texttt{git init} and \texttt{git
+  clone}. \points{2}
+\item Explain the difference between \texttt{git add} and \texttt{git
+    commit}. \points{2}
+\item \label{li:gitpush} Explain the difference between \texttt{git commit} and
+  \texttt{git push} \points{2}
+\end{enuma}
+
+\subsection{Be the Git (10 points)}
+In this problem you should state various outcomes when a number of git
+commands are run on the  directory structure in Figure~\ref{fig:tree}
+(\emph{Documents} is the top-level directory, sub-directories are
+indicated by blue folder icons, files are text):\footnote{You can
+  pretend to be git or you can also create the directory structure
+  yourself and run the commands.}
+
+\begin{figure}[hbt]
+  \centering
+  \begin{forest}
+    for tree={font=\sffamily, grow'=0, folder indent=.9em, folder
+      icons, edge=densely dotted} [Documents [planets [hoth.jpg, is
+    file] [tatooine.jpg, is file] [alderaan.jpg, is file] ] [vehicles
+    [ships [destroyer.txt, is file] [interceptor.txt, is file]]
+    [stations [deathstar.xxx, is file]]] [jedi\_locations.map, is
+    file] [shopping.txt, is file] [TODO, is file] ]
+  \end{forest}  
+  \caption{Part of the directory tree of user dvader. \emph{Documents}
+    is the top-level directory, sub-directories are indicated by blue
+    folder icons, files are just shown as text with their file name,
+    e.g., \emph{TODO} or \emph{hoth.jpg}.}
+  \label{fig:tree}
+\end{figure}
+
+User dvader decides (quite sensibly) to use version control, namely
+\textbf{git}, for his Documents. The \emph{Documents} directory was
+not under version control before.  The first set of commands that he
+performs is:
+\begin{minted}{bash}
+cd Documents
+git init
+git add shopping.txt
+git add planets/alderaan.jpg
+\end{minted}
+
+To answer the following question, create a table where you list the
+command that is being executed, the \emph{files in the git staging
+  area} and the \emph{files in the git repository}. After the initial
+commands, your table should look like this:
+
+\begin{center}
+  \begin{tabular}{lp{0.4\linewidth}p{0.3\linewidth}}
+    \toprule
+    command & staging area & repository\\
+    \midrule
+    git init & & \\
+    git add shopping.txt & shopping.txt & \\
+    git add planets/alderaan.jpg & shopping.txt, planets/alderaan.jpg & \\
+    \bottomrule                           
+  \end{tabular}
+\end{center}
+
+List \emph{all} files that are in either staging area or repository,
+not just new ones. If there are no files (as in the repository during
+the first three \texttt{git} commands), leave the space empty.
+
+Add the table above to your submitted solution and continue it by
+listing all the files in the staging area and in the repository, after
+each of the following commands have been carried out:
+\begin{minted}{bash}
+git commit
+git add vehicles/stations
+git commit
+git add vehicles TODO
+git commit
+git rm planets/alderaan.jpg
+git add planets
+git commit
+\end{minted}
+
+
+
+\subsection{Your GitHub account (10 points)}
+
+As part of the last lesson you should have
+\href{http://asu-compmethodsphysics-phy494.github.io/ASU-PHY494/page2/#set-up-your-own-github-repositories}{set
+  up your own GitHub account} on \url{https://github.com} (if you have
+not done it yet, do it now!). What is your \textbf{GitHub username}?
+\begin{itemize}
+\item Write down your GitHub username. \points{10}
+\item Take the survey
+  \href{https://goo.gl/forms/eA0BZ4xMMijsY8Gp2}{PHY
+    494: Your GitHub account}\footnote{In case the link to the survey
+    is not clickable: got to
+    \url{https://goo.gl/forms/AZMtF6c60FBdCCkt1}. You must be logged
+    in with your ASU account. Log in to \url{https://my.asu.edu} first
+    and then go to the survey.} if you have not done so already.
+\end{itemize}
+
+
+\subsection{Simple coordinate manipulation in Python (11 points)}
+
+We can represent the cartesian coordinates
+$\vec{r}_{i} = (x_{i}, y_{i}, z_{i})$ for four particles as a list of
+lists \texttt{positions}:
+\begin{minted}{python}
+  positions = \
+      [[0.0, 0.0, 0.0], [1.34234, 1.34234, 0.0], \
+       [1.34234, 0.0,  1.34234], [0.0, 1.34234, 1.34234]]
+\end{minted}
+For the following, do not import any additional modules: \emph{only
+  use pure Python.} The repository contains skeleton code
+\texttt{coordinates\_a.py}, \texttt{coordinates\_b.py},
+\texttt{coordinates\_c.py}, \texttt{coordinates\_d.py} for the
+sub-problems. Add your code to these files and \emph{submit them as
+  part of your solution}---code must be included to get full
+points.\footnote{You will also see a file
+  \texttt{test\_coordinates.py}. It contains \emph{tests} that check
+  your code. Your instructors will \emph{run these tests on your
+    code}. You can run them yourself with the \texttt{pytest} command,
+
+  \mintinline{bash}{pytest -v test_coordinates.py}
+
+  If everything is correct, you should see something like
+  \texttt{===== 9 passed in 0.10 seconds =====}. If tests fail then
+  you can correct your code until you get the tests to pass.}
+\begin{enuma}
+  \item Access the coordinates of the second particle, assign it to
+    a variable \texttt{particle2}, and print the coordinates. \points{1}
+  \item Access the $y$-coordinate of the
+    second particle, assign it to the variable \texttt{y2}, and print
+    the value. \points{1}
+  \item \label{li:translation} Write Python code to translate all particles by a vector
+    $\vec{t} = (1.34234, -1.34234, -1.34234)$,
+\begin{minted}{python}
+t = [1.34234, -1.34234, -1.34234]
+\end{minted}
+    Assign the translated coordinates to the variable
+    \texttt{new\_positions} and print them. \points{3}
+  \item Make your solution of \ref{li:translation} a function
+    \texttt{translate(coordinates, t)}, which translates all
+    coordinates in the argument \texttt{coordinates} (a list of $N$
+    lists of length 3) by the translation vector in \texttt{t}. The
+    function should return the translated coordinates.
+
+    Apply your function to (1) the input \texttt{positions} and
+    \texttt{t} from above and (2) for \texttt{positions2 = [[1.5,
+      -1.5, 3], [-1.5, -1.5, -3]]} and \texttt{t = [-1.5, 1.5,
+      3]} and show the output. \points{6}
+\end{enuma}
+
+\subsection{Squash the bug (10 points)}
+\label{sec:bugs}
+
+Three files \texttt{bug\_a.py}, \texttt{bug\_b.py}, and
+\texttt{bug\_c.py} are include. Each contains at least one Python
+bug. Fix them and commit your fixed files.\footnote{You will also see a file
+  \texttt{test\_bugs.py}. It contains \emph{tests} that check
+  your code. Your instructors will \emph{run these tests on your
+    code}. You can run them yourself with the \texttt{pytest} command,
+
+  \mintinline{bash}{pytest -v test_bugs.py}
+
+  If everything is correct, you should see something like
+  \texttt{===== 36 passed in 0.36 seconds =====}. If tests fail then
+  you can correct your code until you get the tests to pass.}
+\begin{enuma}
+\item Fix \texttt{bug\_a.py} and commit the fixed file. The code
+  should run, assign the correct value to the variable \texttt{value},
+  and print the correct value. \points{3}
+\item Fix \texttt{bug\_b.py} and commit the fixed file. The code
+  should add two vectors $\vec{a}= (12.3, 3.90, 4.5)$ and
+  $\vec{b} = (1.3, 0.91, -3.3)$ and print the value of the new vector
+  $\vec{c} = 5\vec{a} - 3\vec{b}$ and assign the value to the variable
+  \texttt{c}. \points{3}
+\item Fix \texttt{bug\_c.py} and commit the fixed file. You should
+  correctly implement the 2D $\mathrm{sinc}$ function
+  \begin{gather*}
+    \mathrm{sinc}(x, y) := \frac{\sin x}{x} \frac{\sin y}{y}
+  \end{gather*}
+  (where $x$ and $y$ are given in radians). The function should be
+  correct for arbitrary input.\footnote{Hint: Especially consider the edge
+    and corner cases.} \points{4}
+\end{enuma}
+
+
+
+%Total Points: \arabic{TotalPoints}. Total Bonus: \arabic{TotalBonus}*
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
