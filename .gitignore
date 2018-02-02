@@ -1,0 +1,15 @@
+.ipynb_checkpoints
+.cache
+auto/
+*.log
+*.cpt
+*~
+*.aux
+*.bbl
+*.blg
+*.out
+*.pyc
+__pycache__
+._*
+.DS_Store
+_minted-*
