@@ -1,0 +1,440 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage{framed}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{1}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\anum}{\anumber}
+
+\title{{\Large Project \anumber: A Dilemma!}}
+
+\author{{\sffamily\large Project \emph{Comp. Methods Physics} ASU
+    PHY494 (2018)}%
+  \thanks{Current version of this document: \today. See
+    Appendix~\protect\ref{sec:history} for a list of changes since v1
+    from Feb 06, 2018.}}
+
+\date{{\sffamily\large February 8, 2018 -- Feb 22, 2018}}
+
+
+\begin{document}
+\maketitle
+
+\paragraph{Abstract}
+
+You will investigate the decisions that a driver can make when braking
+for a traffic light that switches from green to yellow by writing code
+in Python to model the car's behavior for different decisions and
+parameters. You will write a short report to communicate, discuss and
+summarize your reasoning and your results.
+
+\begin{framed}
+  \noindent
+  Due Thursday, February 22, 2018, 11:59pm.
+  \begin{itemize}
+  \item Each student works on their own project.
+  \item \textbf{Admissible Collaboration:} Students are allowed to
+    talk to other students in the class about the project and exchange
+    ideas and tips. However, sharing/copying reports or full code
+    solutions is not allowed. \textbf{Help from other students must be
+      acknowledged in an Acknowledgments section}.  Direct help from
+    outside the class is not allowed (except instructor/TA), e.g.,
+    you cannot ask for solutions (online or in person) but you can use
+    books and the internet to solve problems.
+  \item Each student should commit their \emph{own} report (see
+    Section~\ref{sec:report}) in \textbf{PDF} format to their own
+    \textbf{GitHub repository}; alternatively, combining report and
+    code in a Jupyter notebook is also possible as long as the
+    notebook can be read like a report (i.e., not just bullet points
+    or short comments).
+  \item Each student should commit and push \textbf{all code} (see
+    Section \ref{sec:code}) that is required to reproduce the results
+    in the report to their own \textbf{GitHub repository}. Include a
+    text file \textbf{\texttt{README.txt}} that describes the commands
+    to run calculations. The code must run in the standard
+    anaconda-based environment used for the class. If it is a Jupyter
+    notebook then it should be possible to \emph{Kernel $\rightarrow$
+      Restart \& Run All} and to produce all the required figures and
+    output.
+  \end{itemize}
+  Grading will take the following into consideration:
+  \begin{itemize}
+  \item code runs and produces correct output
+  \item report clearly and succinctly describes the question,
+    approach, and results and contains sufficient evidence that the
+    requirements (see below) have been met
+  \item thorough attribution of code and help
+  \item any additional work that you want to include in an appendix to
+    the report or additional simulations for the main report will be
+    treated as bonus material
+  \end{itemize}
+\end{framed}
+
+\section{Submission instructions}
+
+\noindent
+%  \url{}
+\fbox{\parbox{\linewidth}{Submission is now to your \textbf{private
+      GitHub repository}. Follow the link provided to you by the
+    instructor in order for the repository to be set up: It will have
+    the name
+    \emph{ASU-CompMethodsPhysics-PHY494/assignments-2018-\emph{YourGitHubUsername}}
+    and will only be visible to you and the instructor/TA. Follow the
+    instructions below to submit this (and all future) homework.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{git clone} your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub user name)
+  \begin{minted}[autogobble]{bash}
+    repo="assignments-2018-YourGitHubUsername.git" 
+    git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}
+  \end{minted}
+  or, if you already have done so, \mintinline{bash}{git pull} from
+  within your assignments directory.
+\item run the script
+  \texttt{./scripts/update.sh} (replace \emph{YourGitHubUsername} with
+  your GitHub user name):
+  \begin{minted}[autogobble]{bash}
+    cd ${repo} 
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three sub-directories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{project\_\anum/Submission},
+  \texttt{project\_\anum/Grade}, and
+  \texttt{project\_\anum/Work}.
+\item You can try out code in the \texttt{project\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{project\_\anum/Grade}.
+\item Create your solution in
+  \texttt{project\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF file or Jupyter notebook inside the
+  \texttt{project\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{project\anum.pdf} or
+    or \texttt{project\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommitted changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2018-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Work must be legible and intelligible or may otherwise be
+returned ungraded with 0 points.
+
+\section{Problem description}
+\label{sec:problem}
+
+A driver in a car approaches an intersection with constant speed
+$v_0 = 55 \text{km/h}$. She sees the traffic light switch from green
+to yellow when she is at a distance $x_0$ from the intersection. She
+has to decide
+\begin{itemize}
+\item to brake (with deceleration $a = -3\,\text{m/s}$) or
+\item to continue driving with constant $v_0$.\footnote{In this
+    problem the driver does not have the (legal) option to accelerate
+    because she is already driving at the speed limit.}
+\end{itemize}
+Any reaction is delayed by the driver's reaction time
+$\delta = 0.8\,\text{s}$. The yellow interval (time between green and
+red) is $\tau = 3\,\text{s}$ and the width of the intersection is
+$W = 45\,\text{m}$. You can ignore the length of the car. Take the
+entrance of the intersection and the position of the traffic light to
+be at $x=0$ (see Figure~\ref{fig:setup}).
+
+\begin{figure}[btp]
+  \centering
+  \includegraphics[width=0.6\linewidth]{figs/p1_setup}
+  \caption{Geometry of the traffic situation. $x_{0}$ is the position
+    of the car at time $t=0$ when the traffic light at $x=0$ switches
+    to yellow. The width of the intersection is $W$. If $x_{0} \ge
+    x_{0}^{A}$ then the car will be able to cross the intersection
+    before the light switches to red; if $x_{0} \le x_{0}^{B}$ then
+    the car will be able to brake before the traffic light. The gray
+    zone is the ``\emph{dilemma zone}''.}
+  \label{fig:setup}
+\end{figure}
+
+Your task will be to determine if there are situations in which the
+driver will not be able to adhere to the traffic code, i.e., if she
+will either run a red light or not clear the intersection before the
+traffic light has switched to red. In particular, you should find out
+if there is a starting position ($x_{0}^{B}$ in
+Figure~\ref{fig:setup}) before which braking is safe (i.e., the car
+will stop before the traffic light) and if there is a starting
+position ($x_{0}^{A}$) beyond which crossing the intersection is safe
+(i.e., the car will cross the intersection before the light has
+switched from yellow to red).
+
+Under certain conditions there can exist a range of values
+$x_{0}^{B} < x_{0} < x_{0}^{A}$ where neither the decision to drive
+across the intersection nor to brake will be successful and therefore
+lead to a dangerous traffic situation. This range of values is called
+the \emph{dilemma zone} (see the gray area in
+Figure~\ref{fig:setup}). The size of the dilemma zone is
+\begin{gather}
+  \label{eq:dilemma}
+  s := x_{0}^{A} - x_{0}^{B}
+\end{gather}
+and the dilemma zone exists when $s > 0$.
+
+\section{Report}
+\label{sec:report}
+
+Write a report in which you address the tasks in Section
+\ref{sec:tasks} below. The report should contain all results (figures,
+tables, equations). It must contain a title, author's name, sections
+\emph{Background} (problem description, definitions), \emph{Results
+  and Discussion} (description and interpretation of results), and
+\emph{Summary} (short summary of the main results). If you had any
+form of outside help you must describe it in an \emph{Acknowledgments}
+section. If you use code or material from elsewhere you \emph{must
+  cite the source} (add a \emph{References} section). Any bonus
+material can be shown in an optional \emph{Appendix}.
+
+The report must be written in full sentences and read as a coherent
+piece of work. Figures must have legends, labels, and captions. Type
+set in an 11pt font with single line spacing (captions, labels, legend
+may have smaller font sizes but must still be legible) and leave at
+least 1~in margins. 
+
+Overall, a length of about four pages is expected; the report should
+not be less than three or more than six pages long.
+
+\section{Code}
+\label{sec:code}
+
+For all numerical calculations use Python 3.x. You may use any of the
+Python packages that are part of the Anaconda 3 distribution such as
+\texttt{numpy} and \texttt{matplotlib}. 
+
+Include all the code that is needed to generate the results shown in
+your report. This can consist of Python programs, modules, a Jupyter
+notebook, or a mixture thereof. Include a separate file
+\texttt{README.txt} that explains how to run your code in order to
+generate the results in your report. Your code must run in order for
+you to be awarded full marks.
+
+
+\section{Tasks}
+\label{sec:tasks}
+Address the following tasks in your report:
+
+\begin{enuma}
+\item Write down the equations of motions of the car, namely $v(t)$
+  and $x(t)$, depending on $x_0$ for both the decision to brake or to
+  continue driving.\footnote{The Heaviside step function
+    Eq.~\ref{eq:heaviside} and its Python implementation in Appendix
+    \ref{sec:heaviside} might be useful.}\label{li:eom}
+
+\item Use your equations of motions from \ref{li:eom} to define Python
+  functions to compute the velocity $v(t)$ and position $x(t)$ for any
+  $t$, depending on $x_0$ and for both the decision to brake or to
+  continue driving.
+
+  Plot $v(t)$ and $x(t)$ for $0 \le t \le 7\,\text{s}$ in time steps
+  of $\Delta t = 0.1\,\text{s}$ for $x_{0} = -30\,\text{m}$ (which
+  should look similar to Figure~\ref{fig:timeseries}) as well as
+  $x_{0} = -70\,\text{m}$ and $x_{0} = -0.5\,\text{m}$. Plot graphs
+  for \emph{driving} and \emph{braking} in the same figure. Indicate
+  the time $\tau$ at which the traffic light switches to red and the
+  extent of the intersection $W$ in your figures.\footnote{See
+    Appendix \ref{sec:plot} for Python code to plot a dashed vertical
+    line and a gray rectangle, similar to those shown in
+    Figure~\protect\ref{fig:timeseries}.} For each figure explain
+  whether a safe or a dangerous situation is occuring (see also
+  \ref{li:classification}).
+   
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figs/pos_vel_x0-30m}
+    \caption{Example plot for time series $x(t)$ and $v(t)$ for
+      $x_0 = -30\,\text{m}$. The red dashed line indicates time $\tau$
+      and the shaded gray area indicates the extent of the crossing
+      $W$.}
+    \label{fig:timeseries}
+  \end{figure}
+
+\item \label{li:classification} Classify outcomes as either
+  \emph{safe} or \emph{dangerous}, depending on $x_{0}$: For a given
+  $x_{0}$, calculate the time series of the velocities
+  $v_{\text{drive}}(t)$ and positions $x_{\text{drive}}(t)$ when the
+  decision is made to attempt to \emph{drive} across the
+  intersection. Also calculate the time series $v_{\text{break}}(t)$
+  and $x_{\text{break}}(t)$ for the decision to brake. Use a range of
+  time points $0 \le t_{i} \le t_{\text{max}}$ and
+  $\Delta t = 0.1\,\text{s}$. You need choose $t_{\text{max}}$
+  sufficiently large to see the car to come to a stop or to cross the
+  intersection.
+
+  Analyze the position trajectories $x(t)$ for driving/braking: The
+  outcome is safe if
+  \begin{description}
+  \item[driving] $x>W$ for $t>\tau$ 
+  \item[braking] $x<0$ for all $t$
+  \end{description}
+  Otherwise it is dangerous. For a given $x_{0}$, the outcome is safe
+  if there is at least one safe course of action.
+
+  Determine if the situation is safe for $x_{0} = -70\,\text{m}$,
+  $-30\,\text{m}$, and $-0.5\,\text{m}$.  
+
+ \item Map out the zone of values $x_{0}$ that lead to dangerous
+  situations, i.e., that do not allow the driver to either brake or
+  complete the crossing of the intersection in time.
+
+  Run the calculations for $x_0$ ranging from $-100\,\text{m}$ to the
+  entrance of the intersection $x_0=0$ in $0.5\,\text{m}$ intervals
+  and determine for each $x_{0}$ if allows for a safe decision or
+  not. 
+
+  \begin{enumi}
+  \item Plot the classification (e.g., \texttt{True} for \emph{safe},
+    \texttt{False} for \emph{dangerous}) against $x_{0}$. Show and
+    discuss your plot.
+  \item Determine the numerical values of the dilemma zone
+    $x_{0}^{A}$, $x_{0}^{B}$, and $s$ (Eq.~\ref{eq:dilemma}) from your
+    data.
+  \end{enumi}
+
+\item Solve the whole problem analytically:
+  \begin{enumi}
+  \item Find general expressions for $x_{0}^{A}$, $x_{0}^{B}$, and
+    $s$, which should only depend on $x_{0}$, $v_{0}$, $\delta$,
+    $\tau$, and $W$.
+  \item Compute $x_{0}^{A}$, $x_{0}^{B}$, and $s$ for the given
+    parameters of the problem and compare to your simulation results.
+  \end{enumi}
+
+\item \BONUS\footnote{You do not have to work on this problem and you
+    can still get 100\% of the points on the whole project but if you
+    include results for the \BONUS problem then you can get additional
+    bonus points.}  Determine the size of the dilemma zone as a
+  function of the initial speed, $s(v_{0})$, and plot it for
+  $20\,\text{km/h} \le v_{0} \le 100\,\text{km/h}$. In a second plot
+  show $x_{0}^{A}(v_{0})$ and $x_{0}^{B}(v_{0})$ for the same range of
+  $v_{0}$. You may solve this problem either numerically or
+  analytically.
+\end{enuma}
+
+\appendix{}
+
+\section{Heaviside step function}
+\label{sec:heaviside}
+
+The Heaviside step function
+\begin{gather}
+  \label{eq:heaviside}
+  \Theta(x) =
+  \begin{cases}
+    1,& \quad x > 0\\
+    \frac{1}{2},& \quad x = 0\\
+    0,& \quad x < 0
+  \end{cases}
+\end{gather}
+can be computed with the Python function
+\begin{minted}[linenos,breaklines]{python}
+import numpy as np
+
+def heaviside(x):
+    """Heaviside step function.
+    
+    Arguments
+    ---------
+    x : scalar or array
+    
+    Returns
+    -------
+    float64 scalar or array
+    
+    From http://stackoverflow.com/a/15122658/334357
+    """
+    return 0.5 * (np.sign(x) + 1)  
+\end{minted}
+It has the advantage that it functions as a NumPy ufunc, i.e., it
+works equally well with scalar and array input.
+
+\section{Plotting}
+\label{sec:plot}
+
+The following code can be used (perhaps with modifications) to add a
+vertical dashed line to a plot and to plot a gray filled area:
+\begin{minted}[linenos,breaklines]{python}
+import matplotlib.pyplot as plt
+
+# plot dashed red line at tau
+plt.plot([tau, tau], [x0, 1.05*W], "--", color="red", lw=1)
+
+# plot gray area to indicate intersection
+plt.fill_between([0, 7], [W, W], color="black", alpha=0.3)
+\end{minted}
+
+\section{History}
+\label{sec:history}
+
+Changes and updates to this document.
+\begin{description}
+\item[2018-02-06] initial version
+\end{description}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
