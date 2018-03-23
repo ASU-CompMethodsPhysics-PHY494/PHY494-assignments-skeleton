@@ -1,0 +1,214 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm,amsbsy}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{courier}
+\usepackage{url}
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+
+
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{8}
+%
+%------------------------------------------------------------
+\newcommand{\anum}{0\anumber}
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (15 points total)}
+
+\noindent Due Thursday, March 29, 2018, 11:59pm.
+
+\noindent
+%  \url{}
+\fbox{\parbox{\linewidth}{Submission is to your \textbf{private
+      GitHub repository}.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{cd} into your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username) and run the
+  update script \texttt{./scripts/update.sh} (replace
+  \emph{YourGitHubUsername} with your GitHub username):
+  \begin{minted}{bash}
+    cd  assignments-2018-YourGitHubUsername
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2018-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible or may otherwise be
+returned ungraded with 0 points.
+
+\subsection{Square-root with Newton's method (15 points)}
+\label{sec:sqrt}
+
+The square root function\footnote{The symbol $\sqrt{\cdot}$ is
+  commonly used to denote the operation of $q$, so that
+  $q(x) \equiv \sqrt{x}$. For the following it is more useful to think
+  of the square root as a special function than just a calculation.}
+$q(x)$ can be \emph{defined} by the equation
+\begin{gather}
+  \label{eq:sqrtdef}
+  q(x)^{2} = x.
+\end{gather}
+The goal is to develop and to implement an \textbf{efficient algorithm
+to compute square roots}.
+
+The defining equation Eq.~\ref{eq:sqrtdef} can be rearranged as 
+\begin{align}
+  q(x)^{2} - x &= 0   \label{eq:sqrtroot}\\
+  q^{2} - x &= 0 \label{eq:q}\\
+  f_{x}(q) &= 0 \label{eq:fqx}
+\end{align}
+where $f_{x}(q) = q^{2} - x$ is now considered a function of the
+\emph{variable} $q$ and a given \emph{parameter} $x$. Finding the
+square root $q(x)$ amounts to finding the root of $f_{x}(q)$, i.e.,
+find that value $q$ that makes Eq.~\ref{eq:q} true for a given $x$.
+
+\begin{enuma}
+\item \label{li:NR} Use the iterative Newton-Raphson algorithm from the class to
+  implement a function \texttt{sqrt(x, tol=1e-6, Nmax=100)} in a
+  module \texttt{functions.py} that returns the square root of $x$ to
+  a tolerance of \texttt{tol} and uses at a maximum \texttt{Nmax}
+  iterations. If \texttt{Nmax} is exceeded print a warning message and
+  return \texttt{None}.\footnote{In your code you may \emph{not} use a
+    library square root function such as \texttt{math.sqrt} or
+    \texttt{numpy.sqrt} nor taking fractional powers such as
+    \texttt{x**0.5} or \texttt{numpy.power(x, 0.5)}.} Your code should
+  guess a good starting value for the Newton-Raphson scheme,
+  e.g,. $x/2$. 
+
+  In the Newton-Raphson scheme you have to calculate the update
+  $\Delta q$ to $q$ in order to obtain the new best guess for the root
+  \begin{gather}
+    \label{eq:update}
+    q \leftarrow q + \Delta q
+  \end{gather}
+  with
+  \begin{gather}
+    \label{eq:NR}
+    \Delta q = -\frac{f_{x}(q)}{f_{x}'(q)}
+  \end{gather}
+  In your code you may either use a finite difference scheme to
+  calculate $f_{x}'(q)$ \emph{or} (more efficiently), use the
+  \emph{analytical derivative} $f_{x}'(q) = 2q$
+  directly.\footnote{Using the analytical derivatives makes for a
+    handy algorithm to \emph{manually} calculate square roots and
+    indeed this is how Newton came up with the method. The algorithm
+    for computing the square root was also already known to the
+    ancient Babylonians.}
+
+  Your code must produce correct results, as tested with
+  \texttt{test\_functions.py}.\footnote{Some specific tests are
+    allowed to fail and they are marked with \texttt{x} or
+    \texttt{xfail} in the test output --- this is ok.} You can run
+  these tests yourself with
+\begin{minted}{bash}
+pytest -v test_functions.py
+\end{minted}
+  (in the same directory as your \texttt{functions.py}). \points{10}
+\item \label{li:results} Show results for
+  $x = 0, 0.456\times 10^{-8}, 10^{-3}, 0.1, 0.64, 0.99, 1, 5, 9, 12.5,
+  10^{3}, 1.2345 \times 10^{8}$
+  for a tolerance of $10^{-6}$. Put the results in a text file
+  \texttt{sqrt.txt}. The results should be arranged so that each line
+  contains $x$ and $q(x)$. \points{5}
+% \item \label{li:analytical}\BONUS Do one Newton-Raphson step analytically and come up with
+%   a handy way to calculate approximations to square roots. \bonus{3}
+\end{enuma}
+
+\noindent
+Note: You don't have to submit any notebooks or written
+text for problems \ref{li:NR} and \ref{li:results}. It will be sufficient to submit
+\begin{itemize}
+\item \texttt{functions.py}
+\item \texttt{sqrt.txt}
+\end{itemize}
+% If you are also solving the \emph{Bonus problem \ref{li:analytical}}
+% then include a text document in PDF format to show your solution.
+
+
+
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
