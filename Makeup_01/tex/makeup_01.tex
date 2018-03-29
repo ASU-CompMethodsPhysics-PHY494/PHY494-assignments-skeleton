@@ -1,0 +1,225 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm,amsbsy}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{courier}
+\usepackage{url}
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+
+
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{listings}
+
+\lstset{
+  language=python, 
+  basicstyle=\footnotesize\ttfamily
+}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% makeup
+%
+\newcommand{\anumber}{1}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Makeup assignment \anumber{} (15 points total)}
+
+\noindent Due Thursday, April 5, 2018, 11:59pm.
+
+\noindent This is a \textbf{optional Makeup Assignment}. If you choose
+to hand it in by the deadline, it will be graded like a normal
+homework assignment. If its grade is better than your worst homework
+grade then it will replace that grade.
+
+\noindent
+\fbox{\parbox{\linewidth}{Submission is to your \textbf{private
+      GitHub repository}.}}
+
+Enter the repository and run the script
+\texttt{scripts/update.sh} (replace \emph{YourGitHubUsername} with
+your GitHub username):
+\begin{lstlisting}[language=sh]
+cd assignments-2018-YourGitHubUsername
+bash ./scripts/update.sh 
+\end{lstlisting} 
+It should create three subdirectories\footnote{If the script fails,
+  file an issue in the
+  \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+    Tracker for PHY494-assignments-skeleton} and just create the
+  directories manually.} \texttt{makeup\_0\anumber{}/Submission},
+\texttt{makeup\_0\anumber{}/Grade}, and
+\texttt{makeup\_0\anumber{}/Work} and also pull in the PDF of the
+makeup and an additional file.
+
+To submit your makeup assignment, commit and push Python code inside
+the \texttt{makeup\_0\anumber{}/Submission} directory. \emph{Commit
+  any other additional files exactly as required in the problems.}
+
+Failure to adhere to the following requirements may lead to homework
+being returned ungraded with 0 points for the problem.
+\begin{itemize}
+\item Only submit code.
+\item All code should be in a file \texttt{makeup01.py}.
+\item Code will be tested against the unit tests in
+  \texttt{test\_makeup01.py}. The grade will be approximately
+  proportional to the number of tests that pass successfully so your
+  code \emph{must} be able run under the tests. (Failing tests for the
+  Bonus problem can be ignored.)
+\end{itemize}
+
+
+\subsection{ODE with Scipy (15 points)}
+\label{sec:ode}
+
+In this problem you should learn how to use existing functions in a
+library, namely in the \texttt{scipy} package. Part of the problem is
+to find and read the documentation for the function and figure out how
+to use it.
+
+Use the Scipy function \texttt{scipy.integrate.odeint()} to solve the
+following ordinary differential equation 
+\begin{gather}
+  \label{eq:schrodinger}
+  -\frac{1}{2}\frac{d^{2}\psi_{n}(x)}{dx^{2}} + \left[\frac{1}{2}
+    x^{2} - E_{n}\right] \psi_{n}(x) = 0\\
+  \label{eq:initial}
+  \psi_{n}(0) = 1;\quad \frac{d\psi_{n}(0)}{dx} = 0\\
+  \label{eq:energies}
+  E_{n} = n + \frac{1}{2}, \quad n = 0, 2, 4, 6, \dots
+\end{gather}
+for the real function $\psi_{n}(x) $\footnote{If you have done Quantum
+  Mechanics 1 (PHY 314) then you should recognize it as the
+  Schr{\"o}dinger equation for the simple harmonic oscillator.} and the
+three values $n=0$, $n=2$, and $n=8$.
+
+The code should contain the following functions:
+\begin{enumerate}
+\item \textbf{ode\_qmhosc()} solves the ODE Eq.~\ref{eq:schrodinger}:
+\begin{lstlisting}
+psi = ode_qmhosc(x, psi0, dpsidx0, n=n)
+\end{lstlisting}
+  that takes as arguments
+  \begin{itemize}
+  \item all the values $x$ at which the solution should be evaluated
+    (the first value \emph{must} be the one for which the initial
+    conditions are given, i.e., $x=0$ for this problem),
+  \item as initial conditions the function value and first derivative
+    at $x=0$ (Eq.~\ref{eq:initial}), and
+  \item the value of $n$ that determines $E_{n}$
+    (Eq.~\ref{eq:energies}).
+  \end{itemize}
+  It should return the function values $\psi_{n}(x)$ as a numpy array.
+\item \textbf{f\_qmhosc()} is needed to transform the ODE
+  Eq.~\ref{eq:schrodinger} into standard form so that it can be solved
+  with \texttt{scipy.integrate.odeint()}.
+\begin{lstlisting}
+f_qmhosc(y, t, E=0)
+\end{lstlisting}
+  should produce the \emph{ODE standard form}\footnote{Remember that
+    the ODE standard form is
+    \begin{gather*}
+      \frac{d\vec{y}}{dt} = \vec{f}
+    \end{gather*}
+    and in the case of Eq.~\ref{eq:schrodinger}, we would have
+    $t = x$, $y_{0} = \psi_{n}(x)$, and
+    $y_{1} = \psi_{n}'(x) \equiv \frac{d\psi_{n}}{dx}$.} of the derivative
+  vector $\vec{f}$ when provided with
+  \begin{itemize}
+  \item the current values of $\vec{y}$
+  \item the current value of $t$
+  \item and the parameter $E_{n}$ (see Eq.~\ref{eq:schrodinger}).
+  \end{itemize}
+\end{enumerate}
+
+\begin{enuma}
+  \item Numerically solve Eq.~\ref{eq:schrodinger} on a lattice with
+    $\Delta x = 0.01$ for $0 \leq x < 6$ for
+    \begin{itemize}
+    \item $n=0$
+    \item $n=2$
+    \item $n=8$
+    \end{itemize}
+    \begin{enumi}
+    \item The tests in \texttt{test\_makeup01.py} should all pass to
+      show that you correctly implemented a solution.  \points{12}
+    \item Plot all your solutions in one figure and include the figure
+      as a PDF named \texttt{qmhosc.pdf}. \points{3}
+    \end{enumi}
+  \item \BONUS Correct physical\footnote{Physical solutions for the
+      wavefunction $\psi_{n}(x)$ have to be normalizable, i.e., they
+      have to decay to zero for $x \rightarrow \pm\infty$. The
+      numerical solutions only fulfill this requirement for small $x$
+      and even for moderately large $x$ they start to diverge. It
+      would be better to use specialized algorithms that have the
+      normalizability requirement built in.} solutions for
+    Eq.~\ref{eq:schrodinger} are \emph{symmetric}
+    ($\psi(x) = \psi(-x)$) for even $n$ and \emph{antisymmetric}
+    ($\psi(x) = -\psi(-x)$) for odd $n$. This implies that the
+    \emph{initial conditions} for $n=1, 3, 5, \dots$ are different
+    from the ones for even $n$ (Eq.~\ref{eq:initial}). Choose
+    appropriate initial conditions\footnote{Choose $\psi(0) \geq 0$,
+      $\frac{d\psi(0)}{dx} \geq 0$ and either use values of 0 or 1
+      because this is the convention employed in the tests.} and write
+    a function
+\begin{lstlisting}
+phi0, dphidx0 = initial_values_qmhosc(n)
+\end{lstlisting}
+    that produces the correct initial values depending on the
+    value of $n$.
+
+    Using your initial values, solve Eq.~\ref{eq:schrodinger} for
+    $n=3$ and plot the solution (include a PDF named
+    \texttt{qmhosc\_odd.pdf}). \bonus{4}
+\end{enuma}
+% http://docs.scipy.org/doc/scipy/reference/tutorial/integrate.html#ordinary-differential-equations-odeint
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
