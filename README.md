@@ -4,7 +4,7 @@
 Submission of homework is now to your *private GitHub
 repository*. Follow the link provided to you by the instructor in
 order for the repository to be set up: It will have the name
-*ASU-CompMethodsPhysics-PHY494/assignments-2018-YourGitHubUsername*
+*ASU-CompMethodsPhysics-PHY494/assignments-2019-YourGitHubUsername*
 and will only be visible to you and the instructor/TA. Follow the
 instructions below to submit homework.
 
@@ -12,7 +12,7 @@ instructions below to submit homework.
 and run the script `scripts/update.sh` (replace `YourGitHubUsername`
 with your GitHub username):
 ```
-repo="assignments-2018-YourGitHubUsername"
+repo="assignments-2019-YourGitHubUsername"
 git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}.git
 cd ${repo}
 bash ./scripts/update.sh 
@@ -21,7 +21,7 @@ bash ./scripts/update.sh
 New homework assignments will be added during the semester. Run
 `update.sh` to get a new assignment:
 ```
-repo="assignments-2018-YourGitHubUsername"
+repo="assignments-2019-YourGitHubUsername"
 cd ${repo}
 bash ./scripts/update.sh 
 ```
