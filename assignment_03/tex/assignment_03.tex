@@ -1,0 +1,326 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{3}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\python}[1]{\mintinline{python}{#1}}
+
+\newcommand{\anum}{0\anumber}
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (52 points total)}
+
+\noindent Due Thursday, Jan 31, 2019, 5pm.
+
+\noindent
+\fbox{\parbox{\linewidth}{Submission is now to your \textbf{private
+      GitHub repository}. Follow the link provided to you by the
+    instructor in order for the repository to be set up: It will have
+    the name
+    \emph{ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}
+    and will only be visible to you and the instructor/TA. Follow the
+    instructions below to submit this (and all future) homework.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{git clone} your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username)
+  \begin{minted}{bash}
+    repo="assignments-2019-YourGitHubUsername.git" 
+    git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}
+  \end{minted}
+\item run the script
+  \texttt{./scripts/update.sh} (replace \emph{YourGitHubUsername} with
+  your GitHub username):
+  \begin{minted}{bash}
+    cd ${repo} 
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible and on-time or may  be
+returned ungraded with 0 points.
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+
+\subsection{Python data types (7 points)}
+What is the Python data type of each of the following values?
+\begin{enuma}
+\item \python{3.14515} \points{1}
+\item \python{0} \points{1}
+\item \python{False} \points{1}
+\item \python{'To be or not to be'} \points{1}
+\item \python{[3, 2, 1, "lift off!"]} \points{1}
+\item \python{3, 2, 1, "lift off!"} \points{1}
+\item \python{None} \points{1}
+\item \BONUS \python{{'name': 'Hamlet', 'occupation': 'Prince'}} \bonus{1}
+\end{enuma}
+
+
+\subsection{Python Lists and Strings (20 points)}
+
+Lists and strings share some similarities but also have important
+differences. Let's look at them. (Type code in the Python interpreter
+e.g., \texttt{ipython}).
+
+\begin{minted}{python}
+bag = ["guide", "towel", "tea", 42]
+ga = "Four score and seven years ago"
+\end{minted}
+
+\begin{enuma}
+\item How do you have to slice \python{bag} in order to get
+  \python{['towel', 'tea']}? \points{1}
+\item What does \python{bag[::-1]} do?  
+  
+  How do you slice bag in order to get
+  \python{['tea', 'towel']}?  \points{2}
+\item Strings can also be sliced. How do you have to slice \python{ga}
+  to get
+  \begin{itemize}
+  \item   "Four"
+  \item   "seven"
+  \end{itemize}
+  \points{2}
+\item You can access elements of a list in a variety of ways: 
+  \begin{enumi}
+  \item   Explain what
+\begin{minted}{python}
+bag[0] = 'book'
+\end{minted}
+    does? (Hint: print \python{bag}!) \points{1}
+  \item  Create two new variables:
+\begin{minted}{python}
+mybag = bag
+yourbag = bag[:]
+\end{minted}
+    and use them:
+\begin{minted}{python}
+mybag[3] = "mice" 
+yourbag.append("money")
+\end{minted}
+    What is the content of \python{bag}, \python{mybag},
+    \python{yourbag}? \points{2}
+  \item  From your observations, explain how the assignment \python{x = a} differs
+    from \python{y = a[:]}? \points{3}
+  \end{enumi}
+\item  Try
+\begin{minted}{python}
+  ga[:4] = "Three"
+\end{minted}
+  \begin{enumi}
+  \item Describe what happens?\footnote{Note that strings are
+      ``immutable'' objects in Python whereas lists are ``mutable''.}
+    \points{1}
+  \item How would you construct the string \python{"Three score and
+      seven years ago"} from \python{ga} and the string
+    \python{"Three"}? \points{1}
+  \end{enumi}
+\item What do the commands
+\begin{minted}{python}
+ga.split()
+a, b, c = ga.split()[:3]
+list([1,2,3])
+list(ga)
+\end{minted}
+  do? You can show the output but you need to explain in your own
+  words what is happening. \points{4}
+\item Nested lists: Given the list
+\begin{minted}{python}
+bags = [['salt', 'pepper'], ['pen', 'eraser', 'ruler']]
+\end{minted}
+  how do you have to index \python{bags} to get
+
+  \begin{enumi}
+  \item \python{['salt', 'pepper']} \points{1}
+  \item \python{'pepper'} \points{1}
+  \item \python{'ruler'} \points{1}
+  \end{enumi}
+\end{enuma}
+
+\subsection{Loops (14 points)}
+\begin{enuma}
+\item Use a \python{for} loop to print each element of the list
+  \begin{minted}{python}
+    sentence = ["We", "must", "walk", "before", "we", "can", "run"]
+  \end{minted}
+  Show your code and your output. \points{4}
+\item \BONUS Find a way to only print every other line from
+  \python{sentence}, i.e., the output should read ``We walk we
+  run''. Show your code and your output. \bonus{2}
+\item Use a loop to sum the integers from 1 to 1000 and print the
+  final result (500500). \points{4}
+
+  \noindent\emph{Note}: You can increment a variable \python{total}
+  with a value \python{x} with the assignment
+  \begin{minted}{python}
+    total = total + x
+  \end{minted}
+  or equivalently but more compactly written
+  \begin{minted}{python}
+    total += x
+  \end{minted}
+  Both expressions do the same thing: add two values together and then
+  assign the sum to the variable \python{total}, overwriting the old
+  value of \python{total} in the process.
+\item Write a program that counts down from 10 to 0 and prints each
+  number (``10 9 8 ... 3 2 1'').
+  \begin{enumi}    
+  \item Use a \python{while} loop. \points{3}
+  \item Use a \python{for} loop. \points{3}
+  \end{enumi}
+  (You can use any other Python functions that you might need, such as
+  \python{range}.)
+
+  Show your code and output.
+\end{enuma}
+
+
+\subsection{Simple coordinate manipulation in Python (11 points)}
+
+We can represent the cartesian coordinates
+$\vec{r}_{i} = (x_{i}, y_{i}, z_{i})$ for four particles as a list of
+lists \texttt{positions}:
+\begin{minted}{python}
+  positions = \
+      [[0.0, 0.0, 0.0], [1.34234, 1.34234, 0.0], \
+       [1.34234, 0.0,  1.34234], [0.0, 1.34234, 1.34234]]
+\end{minted}
+For the following, do not import any additional modules: \emph{only
+  use pure Python.} The repository contains skeleton code
+\texttt{coordinates\_a.py}, \texttt{coordinates\_b.py},
+\texttt{coordinates\_c.py}, \texttt{coordinates\_d.py} for the
+sub-problems. Add your code to these files and \emph{submit them as
+  part of your solution}---code must be included to get full
+points.\footnote{You will also see a file
+  \texttt{test\_coordinates.py}. It contains \emph{tests} that check
+  your code. Your instructors will \emph{run these tests on your
+    code}. You can run them yourself with the \texttt{pytest} command,
+
+  \mintinline{bash}{pytest -v test_coordinates.py}
+
+  If everything is correct, you should see something like
+  \texttt{===== 9 passed in 0.10 seconds =====}. If tests fail then
+  you can correct your code until you get the tests to pass.}
+\begin{enuma}
+  \item Access the coordinates of the second particle, assign it to
+    a variable \texttt{particle2}, and print the coordinates. \points{1}
+  \item Access the $y$-coordinate of the
+    second particle, assign it to the variable \texttt{y2}, and print
+    the value. \points{1}
+  \item \label{li:translation} Write Python code to translate all particles by a vector
+    $\vec{t} = (1.34234, -1.34234, -1.34234)$,
+\begin{minted}{python}
+t = [1.34234, -1.34234, -1.34234]
+\end{minted}
+    Assign the translated coordinates to the variable
+    \texttt{new\_positions} and print them. \points{3}
+  \item Make your solution of \ref{li:translation} a function
+    \texttt{translate(coordinates, t)}, which translates all
+    coordinates in the argument \texttt{coordinates} (a list of $N$
+    lists of length 3) by the translation vector in \texttt{t}. The
+    function should return the translated coordinates.
+
+    Apply your function to (1) the input \texttt{positions} and
+    \texttt{t} from above and (2) for \texttt{positions2 = [[1.5,
+      -1.5, 3], [-1.5, -1.5, -3]]} and \texttt{t = [-1.5, 1.5,
+      3]} and show the output. \points{6}
+\end{enuma}
+
+
+
+
+%Total Points: \arabic{TotalPoints}. Total Bonus: \arabic{TotalBonus}*
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
