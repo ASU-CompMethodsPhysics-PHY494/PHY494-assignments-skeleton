@@ -1,0 +1,367 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{4}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\anum}{0\anumber}
+
+
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (36 points total)}
+
+\noindent Due Thursday, Feb 7, 2019, 5pm.
+
+\noindent
+\fbox{\parbox{\linewidth}{Submission is now to your \textbf{private
+      GitHub repository}. Follow the link provided to you by the
+    instructor in order for the repository to be set up: It will have
+    the name
+    \emph{ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}
+    and will only be visible to you and the instructor/TA. Follow the
+    instructions below to submit this (and all future) homework.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{git clone} your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username)
+  \begin{minted}{bash}
+    repo="assignments-2019-YourGitHubUsername.git" 
+    git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}
+  \end{minted}
+\item run the script
+  \texttt{./scripts/update.sh} (replace \emph{YourGitHubUsername} with
+  your GitHub username):
+  \begin{minted}{bash}
+    cd ${repo} 
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible and on-time or may  be
+returned ungraded with 0 points.
+
+\paragraph{Bonus problems}
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+\paragraph{Included code and tests}
+
+The homework comes with starter code in the \texttt{Submission}
+directory. Edit and submit code as directed in the problems. The
+directory also includes files \texttt{test\_hw4.py} and
+\texttt{test\_bugs.py}. You can use these tests to check if your
+solutions are correct:
+\begin{minted}{bash}
+pytest
+\end{minted}
+(If you solved all coding problems, you should see ``112
+passed''. Otherwise you will be informed which problems failed.)
+
+\subsection{Counting Vowels (11 points)}
+\label{sec:vowels}
+
+Given a string \mintinline{python}{s}, count how often each of the 6 vowel letters
+in the English alphabet (A, E, I, O, U, Y -- we include Y here)
+occurs. You can ignore case by converting the string to lowercase with
+\mintinline{python}{s.lower()}.
+
+\begin{enuma}
+\item Write a function \mintinline{python}{count_vowels(s)} and put it in a
+  file \texttt{problem1.py}. It should take a string \mintinline{python}{s} as
+  input and return a list (let's call it \mintinline{python}{counts}) with 6
+  elements, where \mintinline{python}{count[0]} is the count for letter A,
+  \mintinline{python}{count[1]} for E etc. \footnote{Hint: you can iterate through
+    a string like a list using \mintinline{python}{for letter in s:} and
+    then analyze the letter.}\points{10}
+\item Apply your function to the string
+  \begin{minted}{python}
+    s = """'But I don't want to go among mad people,' Alice remarked.
+    'Oh, you can't help that,' said the Cat, 'we're all mad here. I'm
+    mad. You're mad.' 'How do you know I'm mad?' said Alice.  'You
+    must be,' said the Cat, 'or you wouldn't have come here.'"""
+  \end{minted}
+  and report the counts in the variable \mintinline{python}{counts}
+  in the same file. \points{1}
+\end{enuma}
+
+
+\subsection{Factorial Fun (15 points)}
+\label{sec:factorialfun}
+
+The factorial function is defined for integers $n>0$ by
+\begin{gather}
+  \label{eq:factorial}
+  n! = n \cdot(n-1) \cdot (n-2) \dots 2 \cdot 1 = \prod_{k=1}^{n}k
+\end{gather}
+and $0! = 1$ is \emph{defined} for consistency.
+
+The \href{http://mathworld.wolfram.com/DoubleFactorial.html}{double
+  factorial} is defined by
+\begin{gather}
+  n!! = \begin{cases}
+    n \cdot (n-2) \cdot (n-4) \cdot \dots \cdot 5 \cdot 3 \cdot 1,& \quad n>0 \ \text{odd}\\
+    n \cdot (n-2) \cdot (n-4) \cdot \dots \cdot 6 \cdot 4 \cdot 2,& \quad n>0 \ \text{even}\\
+    1,& \quad n = 0, -1
+  \end{cases}.\label{eq:doublefactorial}  
+\end{gather}
+
+\begin{enuma}
+\item Find a function in the
+  \href{https://docs.python.org/3/library/math.html}{\mintinline{python}{math}}
+  standard library to calculate $n!$ (Eq.~\ref{eq:factorial}).
+  \begin{enumi}
+  \item Write a function \mintinline{python}{factorial_math(n)} that
+    computes $n!$ for $n \ge 0$. This function \emph{should} use the
+    function from \mintinline{python}{math}. Put the function
+    \mintinline{python}{factorial_math(n)} in a file
+    \texttt{problem2a.py}. \points{2}
+  \item Show results for the integers $n = 0, 1, 2, 3, ...,
+    20$. \points{1}  
+  \end{enumi}
+\item Write a function to calculate the factorial $n!$ (Eq.~\ref{eq:factorial}):
+  \begin{enumi}
+  \item Create a function \mintinline{python}{factorial(n)} that
+    computes $n!$ for $n \ge 0$. This function should \emph{not} use
+    any modules (i.e., neither \mintinline{python}{math} nor
+    \mintinline{python}{numpy}). Put the function in a file
+    \texttt{problem2b.py}. \points{4}
+  \item Show results for the integers $n = 0, 1, 2, 3, ...,
+    20$. \points{1}
+  \end{enumi}
+\item Write a function to calculate the double factorial $n!!$
+  (Eq.~\ref{eq:doublefactorial}):
+  \begin{enumi}
+  \item Create a function \mintinline{python}{double_factorial(n)}
+    that computes the double factorial Eq.~\ref{eq:doublefactorial}
+    for an integer \mintinline{python}{n}. The function should only return the
+    value of $n!!$. This function should \emph{not} use any modules
+    (i.e., neither \mintinline{python}{math} nor
+    \mintinline{python}{numpy}). Put the function in a file
+    \texttt{problem2c.py}. \points{6}
+  \item Show results for the integers $n = 0, 1, 2, 3, ...,
+    20$. \points{1}
+  \end{enumi}
+\end{enuma}
+
+
+\subsection{Squash the bug (10 points)}
+\label{sec:bugs}
+
+Three files \texttt{bug\_a.py}, \texttt{bug\_b.py}, and
+\texttt{bug\_c.py} are include. Each contains at least one Python
+bug. Fix them and commit your fixed files.\footnote{You will also see a file
+  \texttt{test\_bugs.py}. It contains \emph{tests} that check
+  your code. Your instructors will \emph{run these tests on your
+    code}. You can run them yourself with the \texttt{pytest} command,
+
+  \mintinline{bash}{pytest -v test_bugs.py}
+
+  If everything is correct, you should see something like
+  \texttt{===== 36 passed in 0.36 seconds =====}. If tests fail then
+  you can correct your code until you get the tests to pass.}
+\begin{enuma}
+\item Fix \texttt{bug\_a.py} and commit the fixed file. The code
+  should run, assign the correct value to the variable \texttt{value},
+  and print the correct value. \points{3}
+\item Fix \texttt{bug\_b.py} and commit the fixed file. The code
+  should add two vectors $\vec{a}= (12.3, 3.90, 4.5)$ and
+  $\vec{b} = (1.3, 0.91, -3.3)$ and print the value of the new vector
+  $\vec{c} = 5\vec{a} - 3\vec{b}$ and assign the value to the variable
+  \texttt{c}. \points{3}
+\item Fix \texttt{bug\_c.py} and commit the fixed file. You should
+  correctly implement the 2D $\mathrm{sinc}$ function
+  \begin{gather*}
+    \mathrm{sinc}(x, y) := \frac{\sin x}{x} \frac{\sin y}{y}
+  \end{gather*}
+  (where $x$ and $y$ are given in radians). The function should be
+  correct for arbitrary input.\footnote{Hint: Especially consider the edge
+    and corner cases.} \points{4}
+\end{enuma}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+\subsection{BONUS: File processing in Python (15* bonus points)}
+The standard way to open a file in Python and to process it line by
+line is the code pattern
+\begin{minted}[linenos,breaklines]{python}
+with open(filename, 'r') as inputfile:
+   for line in inputfile:
+       line = line.strip()   # strip trailing/leading whitespace
+       if not line:
+          continue           # skip empty lines
+       # now do something with a line
+       # E.g., split into fields on whitespace
+       fields = line.split()
+       # access data as fields[0], fields[1], ... 
+       x = float(fields[0])  # convert text to a float 
+       y = float(fields[1])
+       # ...
+print("Processed file ", filename)
+\end{minted}
+In brief: 
+\begin{enumerate}
+\item A file is opened for reading with \mintinline{python}{open(filename, 'r')},
+  which returns a \emph{file object} (here assigned to the variable
+  \mintinline{python}{inputfile}).\footnote{Opening for writing uses the
+    \mintinline{python}{'w'} argument and one can write a line to the file with
+    \mintinline{python}{fileobject.write(...)}.} The
+  \mintinline{python}{with} statement is a very convenient way to make
+  sure that the file is always being closed at the end: when the
+  \mintinline{python}{with}-block exits (here at the
+  \mintinline{python}{print()} function),
+  \mintinline{python}{inputfile.close()} is called
+  implicitly\cprotect\footnote{If you were not to use \mintinline{python}{with},
+    your code would look like
+\begin{minted}{python}
+inputfile = open(filename)
+for line in inputfile:
+   # ...
+inputfile.close()
+print("Processed file ", filename)
+\end{minted}
+    but with the disadvantage that when something goes wrong during
+    the \mintinline{python}{for}-loop, your file will never be closed, which
+    exhausts system resources. When open a file for \emph{writing}
+    (\mintinline{python}{open(filename, 'w')}) you will \emph{corrupt the file}
+    when you are not closing it properly. The \mintinline{python}{with} statement
+    guarantees that the file will \emph{always be closed, no matter
+      what else happens}. Use the \mintinline{python}{with} statement!}.
+\item We \emph{iterate} over all lines in the file (similar to what we
+  did for lists) in a \mintinline{python}{for}-loop.
+\item Remove leading and trailing white space with the
+  \mintinline{python}{strip()} method of a string (\mintinline{python}{line} is a string). If
+  you want to keep all white space, do not use \mintinline{python}{strip()}.
+\item Skip empty lines: note that an empty string evaluates to
+  \mintinline{python}{False} and thus can be used directly in the \mintinline{python}{if}
+  statement. The \mintinline{python}{continue} statement then starts the next
+  iteration in the loop.
+\item Start processing the line. Often you know the structure of the
+  file (e.g. a data file with 3 columns, separated by white space) so
+  you typically split into fields (the string's \mintinline{python}{split()}
+  method produces a list). Select the fields as needed.
+\item As an example, fields 0 and 1 are assumed to represent floating
+  point numbers. \mintinline{python}{fields[0]} contains a string but using
+  \mintinline{python}{float(fields[0])} it can be converted (``cast'') to a Python
+  float. Similarly, integer numbers can be cast with \mintinline{python}{int()}.
+\end{enumerate}
+
+Use the above information to write a Python program
+\texttt{evaluate\_ships.py} that reads the file
+\href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-resources/blob/master/01_shell/data/starships.csv}{starships.csv}
+(which is also provided as part of the homework). Fields in this file
+are separated by \emph{commas}.\footnote{``csv'' stands for ``comma
+  separated values'' and is a common file format for tabular data.}
+The meaning of the fields (or columns) is
+\begin{minted}{python}
+name,model,vehicle_class,max_atmospheric_speed,cost_in_credits,length
+\end{minted}
+i.e, the first column contains the \emph{name}, the second column the
+\emph{vehicle class} etc. Split the lines on commas and print out the
+names and cost (in credits, ``CR'') of all starships that cost more
+than 100 million CR.\footnote{Hint: Turn all \mintinline{python}{"unknown"}
+  entries into 0 and then cast numbers to floats.}
+
+Submit your code \texttt{evaluate\_ships.py} and your output in a file
+\texttt{starship\_costs.dat}.  \bonus{15}
+
+
+
+
+%Total Points: \arabic{TotalPoints}. Total Bonus: \arabic{TotalBonus}*
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
