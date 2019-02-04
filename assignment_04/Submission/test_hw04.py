@@ -63,10 +63,9 @@ class TestMathFactorial:
         assert problem2a.math is math
 
     @pytest.mark.parametrize("n,expected",
-                             np.array([np.arange(0, 21, dtype=int),
-                                       scipy.special.factorial(
-                                           np.arange(0, 21))],
-                                      dtype=int).transpose())
+                             np.array([np.arange(0, 21),
+                                       scipy.special.factorial(np.arange(0, 21), exact=True)],
+                                      dtype=np.int64).transpose())
     def test_factorial_math(self, n, expected):
         from  problem2a import factorial_math
 
@@ -88,8 +87,8 @@ class TestFactorial:
 
     @pytest.mark.parametrize("n,expected",
                              np.array([np.arange(0, 21),
-                                       scipy.special.factorial(np.arange(0, 21))],
-                                      dtype=int).transpose())
+                                       scipy.special.factorial(np.arange(0, 21), exact=True)],
+                                      dtype=np.int64).transpose())
     def test_factorial(self, n, expected):
         from  problem2b import factorial
 
@@ -114,9 +113,9 @@ class TestDoubleFactorial:
         try:
             from problem2c import double_factorial
         except ImportError:
-            raise AssertionError("Cannot import the problem2.double_factorial function")
+            raise AssertionError("Cannot import the problem2c.double_factorial function")
     @pytest.mark.parametrize("n,expected",
-                             np.array([np.arange(-1, 21, dtype=int),
+                             np.array([np.arange(-1, 21, dtype=np.int64),
                                        np.array([1, 1, 1, 2, 3, 8, 15, 48, 105, 384, 945, 3840, 10395, 46080, 135135, 645120, 2027025, 10321920, 34459425, 185794560, 654729075, 3715891200])]).transpose())
     def test_double_factorial(self, n, expected):
         from  problem2c import double_factorial
