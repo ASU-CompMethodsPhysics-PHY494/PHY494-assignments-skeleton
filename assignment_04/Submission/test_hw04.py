@@ -34,16 +34,6 @@ class TestCountingVowels:
         assert_array_equal(computed, self.expected,
                      err_msg="count_vowels() counted wrong")
 
-    def test_counts(self):
-        import problem1
-
-        if not hasattr(problem1, "counts"):
-            raise AssertionError("Variable problem1.counts not defined")
-
-        assert_array_equal(problem1.counts, self.expected,
-                               err_msg="counts wrong")
-
-
 class TestMathFactorial:
     def test_import_module(self):
         try:
@@ -56,11 +46,6 @@ class TestMathFactorial:
             from problem2a import factorial_math
         except ImportError:
             raise AssertionError("Cannot import the problem2a.factorial_math function")
-
-    def test_imports_math(self):
-        import problem2a
-        import math
-        assert problem2a.math is math
 
     @pytest.mark.parametrize("n,expected",
                              np.array([np.arange(0, 21),
@@ -97,10 +82,12 @@ class TestFactorial:
 
     def test_own_function(self):
         from  problem2b import factorial
-        try:
-            factorial(-1)
-        except ValueError:
-            raise AssertionError("This looks like math.factorial()!")
+        import math
+        #try:
+        #    factorial(-1)
+        #except ValueError:
+        #    raise AssertionError("This looks like math.factorial()!")
+        assert type(math.factorial) is not type(factorial)
 
 class TestDoubleFactorial:
     def test_import_module(self):
