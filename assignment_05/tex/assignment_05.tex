@@ -1,0 +1,391 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{5}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\anum}{0\anumber}
+
+
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (33 points total)}
+
+\noindent Due Thursday, Feb 14, 2019, 11:59pm.
+
+\noindent
+\fbox{\parbox{\linewidth}{Submission is now to your \textbf{private
+      GitHub repository}. Follow the link provided to you by the
+    instructor in order for the repository to be set up: It will have
+    the name
+    \emph{ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}
+    and will only be visible to you and the instructor/TA. Follow the
+    instructions below to submit this (and all future) homework.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{git clone} your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username)
+  \begin{minted}{bash}
+    repo="assignments-2019-YourGitHubUsername.git" 
+    git clone https://github.com/ASU-CompMethodsPhysics-PHY494/${repo}
+  \end{minted}
+\item run the script
+  \texttt{./scripts/update.sh} (replace \emph{YourGitHubUsername} with
+  your GitHub username):
+  \begin{minted}{bash}
+    cd ${repo} 
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible and on-time or may  be
+returned ungraded with 0 points.
+
+\paragraph{Bonus problems}
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+\paragraph{Included code and tests}
+
+The homework comes with starter code in the \texttt{Submission}
+directory. Edit and submit code as directed in the problems. The
+directory also includes a file \texttt{test\_hw5.py}. You can use these
+tests to check if your solutions are correct:
+\begin{minted}{bash}
+pytest -v test_hw5.py
+\end{minted}
+(If you solved all coding problems, you should see ``9 passed''; if
+you also solved the Bonus problem \ref{sec:numpyfuncs}\ref{li:zeta}
+you should see ``7 xpassed''. Otherwise you will be informed which
+problems failed.)
+
+
+\subsection{NumPy arrays (11 points)}
+
+Work through the
+\href{https://docs.scipy.org/doc/numpy-dev/user/quickstart.html}{NumPy
+  tutorial}.\footnote{Some stuff such as the \texttt{ix\_()} function
+  is fairly esoteric for beginners but almost everything else is what
+  you should be familiar with for your daily work with arrays.} Do
+the examples while you read it.
+
+\begin{enuma}
+\item How do NumPy array operations such as $+$, $-$, $*$, $/$ \dots
+    differ from linear algebra operations (i.e. scalar product,
+    vector/matrix multiplication, ...)? \points{2}
+\item For the following, add your code to the file
+  \texttt{problem1.py}. Given the three arrays
+\begin{minted}{python}
+import numpy as np
+
+sx = np.array([[0, 1], [1, 0]])
+sy = np.array([[0, -1j],[1j, 0]])
+sz = np.array([[1, 0], [0, -1]])
+\end{minted}
+  \begin{enumi}
+  \item What is the result of \texttt{result1b1 = sx * sy * sz}?
+    Explain what NumPy array multiplication does to the arrays. (Note:
+    your code should assigne the result to the variable
+    \texttt{result1b1} in \texttt{problem1.py}.) \points{2}
+  \item Use \texttt{np.dot()} to multiply the three arrays (like
+    $\sigma_{x} \cdot \sigma_{y} \cdot \sigma_{z}$). Add your code to
+    \texttt{problem1.py} and assign your result to variable
+    \texttt{result1b2} Show your result and explain what
+    happened. \points{2}
+  \item Compute the ``commutator''
+    $[\sigma_{x}, \sigma_{y}] := \sigma_{x}\cdot\sigma_{y} -
+    \sigma_{y}\sigma_{x}$ and show that it equals
+    $2i\sigma_{z}$.\footnote{These are the Pauli matrices that
+      describe the three components of the spin operator for a spin
+      $1/2$ particle,
+      $\hat{\vec{S}} = \frac{\hbar}{2}\boldsymbol{\sigma}$. The fact
+      that any two components of the spin operator do \emph{not}
+      commute is a fundamental aspect of quantum mechanics.} Add your
+    code to \texttt{problem1.py}, assign the result to variable
+    \texttt{result1b3}. \points{3}
+  \item Given a ``state vector''
+    \begin{gather*}
+      \vec{v} = \frac{1}{\sqrt{2}}\left(
+        \begin{array}{c}
+          1\\
+          -i
+        \end{array}\right)
+    \end{gather*}
+    calculate the ``expectation value''
+    $\vec{v}^{\dagger} \cdot \sigma_{y} \cdot \vec{v}$ (i.e., the
+    multiplication of the hermitian conjugate of the vector,
+    $\vec{v}^{\dagger}$ with the matrix $\sigma_{y}$ and the vector
+    $\vec{v}$ itself) using NumPy. \footnote{The \emph{hermitian
+        conjugate} $\vec{v}^{\dagger} = (v_{1}^{*}, v_{2}^{*})$ is
+      \texttt{v.conjugate().T} where \texttt{v.T} is shorthand for
+      \texttt{v.transpose()}. It turns out that you don't need the
+      transposition when you use \texttt{np.dot()} but I include it
+      here for conceptual clarity. (Including \texttt{transpose()}
+      comes at a minor performance penalty --- check with
+      \texttt{\%timeit} if you are curious.)}  Add your code to
+    \texttt{problem1.py} and assign your result to variable
+    \texttt{result1b4}.\footnote{Note for anyone having done PHY 315
+      (Quantum Mechanics II) that here you are calculating the quantum
+      mechanical expectation value of the $y$-component of a spin
+      $\frac{1}{2}$ particle in an eigenstate of the operator of the
+      $y$-component of the spin ($\sigma_{y}\vec{v} = -\vec{v}$) and
+      because $\vec{v}$ is normalized, you should get the eigenvalue
+      as the expectation value.})  \points{2}
+    \end{enumi}
+\end{enuma}
+
+
+\subsection{Coordinate manipulation with NumPy (16 points)}
+We can represent the cartesian coordinates
+$\vec{r}_{i} = (x_{i}, y_{i}, z_{i})$ for four particles as a numpy array
+\texttt{positions}:
+\begin{minted}{python}
+  import numpy as np
+  positions = np.array(\
+      [[0.0, 0.0, 0.0], [1.34234, 1.34234, 0.0], \
+       [1.34234, 0.0,  1.34234], [0.0, 1.34234, 1.34234]])
+  t = np.array([1.34234, -1.34234, -1.34234])
+\end{minted}
+and \texttt{t} will be a translation vector.
+\emph{For the following use NumPy.} Add your code to file
+\texttt{problem2.py} and assign results to variables as indicated in
+the problems.
+\begin{enuma}
+  \item What is the \emph{shape} of the array \texttt{positions} and
+    what is its \emph{dimension}? \points{1}
+  \item What is the \emph{shape} of the array \texttt{t} and
+    what is its \emph{dimension}? \points{1}
+  \item How do you access the coordinates of the second particle in
+    \texttt{positions}? Assign the result to variable
+    \texttt{result2c}. \points{1}
+  \item For the second particle:
+    \begin{enumi} 
+    \item How do you access its $y$-coordinate? Assign the result to variable
+    \texttt{result2d}.
+      \points{2}
+    \item What type of object is this output, what is its \emph{shape}
+      and its \emph{dimension}? \points{2}
+    \end{enumi}
+  \item \label{li:nptranslation} Write Python code to translate all particles by a vector
+    $\vec{t} = (1.34234, -1.34234, -1.34234)$,
+\begin{minted}{python}
+t = np.array([1.34234, -1.34234, -1.34234])
+\end{minted}
+    Add your code to \texttt{problem2.py} and assign the translated
+    coordinates to variable \texttt{result2e}. \points{3}
+  \item Make your solution of \ref{li:nptranslation} a function
+    \texttt{translate(coordinates, t)}, which translates all
+    coordinates in the argument \texttt{coordinates} (an
+    \texttt{np.array} of shape \texttt{(N, 3)}) by the translation vector
+    in \texttt{t}. The function should return the translated
+    coordinates as a numpy array.
+
+    Add the function to \texttt{problem2.py}. Show the results of the
+    function applied to (1) the input \texttt{positions} and
+    \texttt{t} from above and (2) for \texttt{positions2 =
+      np.array([[1.5, -1.5, 3], [-1.5, -1.5, -3]])} and \texttt{t =
+      np.array([-1.5, 1.5, 3])}. \points{6}
+\end{enuma}
+
+
+\subsection{NumPy functions (6 points)}
+\label{sec:numpyfuncs}
+
+\begin{enuma}
+\item We want to plot the function \footnote{This is the definition
+    used in
+    \href{https://docs.scipy.org/doc/numpy/reference/generated/numpy.sinc.html}{numpy.sinc}
+    function.}
+  \begin{gather}
+    \label{eq:sinc}
+    \text{sinc}(x) := \frac{\sin(\pi x)}{\pi x}
+  \end{gather}
+  over the range $-6 \leq x < 6$.
+  \begin{itemize}
+  \item Use the NumPy \texttt{arange()} function to generate an array
+    \texttt{X} with values from -6 to 6 in steps of 0.2.\footnote{You
+      don't have to include the upper endpoint 6 in the range because
+      this can be difficult to achieve with \texttt{arange()} and a
+      floating point \texttt{step}; as an alternative you can look
+      into using
+      \href{https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html}{\texttt{numpy.linspace()}}.}.
+  \item Apply the NumPy \texttt{sinc()} function to the \texttt{X}
+    array\footnote{You do \emph{not} need any loops. Try
+      \texttt{numpy.sinc(X)} and embrace NumPy!}
+    and assign it to a variable \texttt{Y}.
+  \item Plot your data with matplotlib
+     \begin{minted}[autogobble]{python}
+     import matplotlib.pyplot as plt
+     plt.plot(X, Y)
+     plt.xlabel("x")
+     plt.ylabel("y = sinc(x)")
+     plt.savefig("sinc.png")    # write plot to file
+     \end{minted}
+  \end{itemize}
+  Submit your code as file \texttt{problem3a.py} together with the
+  plot in file \texttt{sinc.png}. \points{4}
+\item \label{li:zeta2}Use the NumPy \texttt{arange()}, the \texttt{sum()}, and the
+  \texttt{sqrt()} functions to calculate the sum\footnote{You can
+    compare your result to the analytical solution
+    \begin{gather*}
+      \sum_{k=1}^{\infty} \frac{1}{k^{2}} = \frac{\pi^{2}}{6}.
+    \end{gather*}
+  }
+  \begin{gather}
+    \label{eq:sum}
+    S = \sqrt{\sum_{n=1}^{100} \frac{6}{n^{2}}}.
+  \end{gather}
+  Put your code into file \texttt{problem3b.py} and assign the result
+  to a variable \texttt{mypi}. \points{2}
+\item \label{li:zeta}\BONUS: Write a function to approximate the real-valued
+  \href{http://mathworld.wolfram.com/RiemannZetaFunction.html}{Riemann
+    Zeta function}
+  \begin{gather}
+    \label{eq:zeta}
+    \zeta(s) = \sum_{k=1}^{\infty} \frac{1}{k^{s}}
+  \end{gather}
+  with the finite sum up to $N_{\text{max}}$ as
+  \begin{gather}
+    \label{eq:zetafinite}
+    \zeta(s) \approx \zeta(s; N_{\text{max}}) := \sum_{k=1}^{N_{\text{max}}} \frac{1}{k^{s}}
+  \end{gather}
+  Add your function \texttt{zeta(s, Nmax=1000)} to a file
+  \texttt{problem3c.py} and plot $\zeta(s)$ in the range
+  $1 < s \leq 10$ and for a range of $N_{\text{max}}$ and include a
+  figure of the plot \texttt{zeta.png}.\footnote{Note that the sum in
+    problem \ref{li:zeta2}
+    $\sum_{k=1}^{\infty} \frac{1}{k^{2}} = \frac{\pi^{2}}{6}$ is equal
+    to $\zeta(2)$\dots} \bonus{4}
+  
+  You can plot multiple graphs within the same plot and add a legend
+  with matplotlib:
+  \begin{minted}[autogobble]{python}
+     import numpy as np 
+     import matplotlib.pyplot as plt
+     
+     def zeta(s, Nmax=1000):
+         """Approximation to the real Riemann zeta function"""
+         # add your code ...
+
+     s = np.arange(1, 10, 0.1)
+     Nmax_values = np.array([10, 100, 1000, 100000])
+
+     fig = plt.figure(figsize=(6, 6))   # new figure          
+     ax = fig.add_subplot(111)          # add "axes", i.e., graph to figure
+
+     # plot each graph into the same axes and label by Nmax
+     for Nmax in Nmax_values:
+        ax.plot(s, zeta(s, Nmax=Nmax), label="Nmax="+str(Nmax))
+
+     # finish the axes by adding labels and legend
+     ax.set_xlabel(r"$s$")         # fancy LaTeX typeset label
+     ax.set_ylabel(r"$\zeta(s)$")  # fancy LaTeX typeset label
+     ax.legend(loc="best")         # place legends
+
+     fig.savefig("zeta.png")
+   \end{minted}
+  (Add the \texttt{label="something"} keyword to the
+  \href{https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot}{\texttt{plot()}}
+  method, plot everything into the same graph (called an
+  ``\href{https://matplotlib.org/api/axes_api.html#axes-class}{axes}''
+  in matplotlib), and then call the
+  \href{https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend}{\texttt{legend()}}
+  method and save the figure.)
+\end{enuma}
+
+
+
+
+%Total Points: \arabic{TotalPoints}. Total Bonus: \arabic{TotalBonus}*
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
