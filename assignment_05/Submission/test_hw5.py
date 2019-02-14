@@ -79,7 +79,7 @@ def test_Problem3b():
     assert_almost_equal(solution.mypi, 3.1320765318091062)
 
 @pytest.mark.xfail
-class TestProblem3a(object):
+class TestProblem3c(object):
     @pytest.fixture(scope="class")
     def solution(self):
         return importlib.import_module("problem3c")
