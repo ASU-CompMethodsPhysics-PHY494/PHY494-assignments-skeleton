@@ -1,0 +1,253 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[paper=letter]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{6}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\anum}{0\anumber}
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (20 points total)}
+
+\noindent Due Sunday, Feb 24, 2019, 11:59pm.
+
+\noindent
+%  \url{}
+\fbox{\parbox{\linewidth}{Submission is to your \textbf{private
+      GitHub repository}.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{cd} into your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username) and run the
+  update script \texttt{./scripts/update.sh} (replace
+  \emph{YourGitHubUsername} with your GitHub username):
+  \begin{minted}{bash}
+    cd  assignments-2019-YourGitHubUsername
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible or may otherwise be
+returned ungraded with 0 points.
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+For problem \ref{sec:exp}: If you implement the
+function as specified you can run the tests in the file
+\texttt{Submission/test\_hw0\anum.py} with \texttt{pytest}
+\begin{minted}{bash}
+  cd Submission
+  pytest test_hw06.py
+\end{minted}
+and all tests should pass. If you have errors, have a look at the
+output and try to figure out what is still not working. Having the
+tests pass is not a guarantee that you will get full points (but it is
+general a very good sign!). 
+
+\subsection{BONUS: Discussion of the errors of finite difference operators
+  (7* bonus points)}
+\label{sec:fderrors}
+
+In lesson
+\href{https://asu-compmethodsphysics-phy494.github.io/ASU-PHY494/2019/02/14/09_Differentiation/}{09 Differentiation} you plotted the absolute error
+$|E_{h}(t)| = |D_{h}\,\cos t - \cos t|$ for three different algorithms
+for the finite difference operator $D_{h}$ with step size $h$ (forward
+difference, central difference, and extended difference) and for three
+different values $t = 0.1, 1, 100$.
+
+Complete all calculations and compare your plots to the ones shown at
+the end of the notebook
+\href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-resources/blob/master/09_differentiation/09-differentiation.ipynb}{09-differentiation.ipynb}. Discuss
+the following questions (write them in a simple text file
+\texttt{problem1.txt} or you can also submit a notebook
+\texttt{problem1.ipynb} but make clear where you answer the questions
+below):
+
+\begin{enuma}
+\item Which algorithm produces the most accurate\footnote{The
+    \emph{accuracy} is measured by the deviation from the exact
+    result, i.e. the lower $|E|$ the more accurate. \emph{Precision}
+    measures how well a number is defined and is essentially the
+    machine precision in our case.} result? Give order-of-magnitude
+  estimates for each one, based on your data. \bonus{2}
+\item \label{li:graphs} Describe the general shape and features of
+  your graphs. Explain why you see increases and decreases in accuracy
+  with varying $h$. \bonus{2}
+\item What is the best value of $h$ in each case? How does the best
+  value of $h$ change with the algorithm? Explain the observed
+  behavior in the light of the answer to your answer \ref{li:graphs}. 
+  \bonus{3}
+\end{enuma}
+
+\subsection{Exponential function (20 points)}
+\label{sec:exp}
+
+The exponential function has the series expansion
+\begin{gather}
+  \exp x = \sum_{n=0}^{+\infty} \frac{x^n}{n!}\label{eq:series}  
+\end{gather}
+
+An algorithm to compute $\exp x$ makes use of the iterative
+solution\footnote{Similar to the iterative solution for the $\sin x$
+  function that was discussed in
+  \href{https://asu-compmethodsphysics-phy494.github.io/ASU-PHY494/2019/02/12/07_Numbers/}{Lecture
+    07}.}
+\begin{align}
+  a_n &= \frac{x^n}{n!} \label{eq:an}\\
+  a_{n+1} &= a_n q_{n+1} = \frac{x^{n+1}}{(n+1)!} = \frac{x^{n}}{n!} \frac{x}{n+1} \label{eq:an1}\\
+  q_n &= \frac{x}{n+1} \label{eq:qn}
+\end{align}
+
+\begin{enuma}
+\item Create a function \texttt{exp\_series(x, eps=1e-15)} in a file
+  \texttt{problem2.py} that computes the $\exp(x)$ function based on the
+  series expansion Eq.~\ref{eq:series} and the iterative solution
+  Eq.~\ref{eq:an}--\ref{eq:qn}. The function should only return the
+  value of $\exp(x)$.
+
+  The function should take an argument \texttt{x} and optional
+  convergence criterion \texttt{eps} with default \texttt{1e-15}.
+
+  The iteration should stop when the \textbf{convergence criterion}
+  \begin{equation}
+    \left|\frac{a_{N}}{\sum_{n=0}^{N} a_{n}}\right| \le \epsilon
+    \label{eq:convergence}  
+  \end{equation}
+  is fulfilled. \points{12}
+  
+\item Show results for $\epsilon = 10^{-15}$ and
+  $x = -9.2103437, 0, 1, 100$  \points{4}
+  
+\item Show results for $\epsilon = 10^{-4}$ and
+  $x = -9.2103437, 0, 1, 100$ \points{4}
+\end{enuma}
+
+\subsection{BONUS CHALLENGE: Stable sum (+10* points)}
+\label{sec:stablesum}
+
+\emph{This problem is a bonus problem that challenges you to do your
+  own research and come up with a working solution.}
+
+The normal Python \mintinline{python}{sum()} or
+\mintinline{python}{numpy.sum()} functions can easily loose
+precision. As an example, try calculating the sum over the sequence
+\begin{gather*}
+  S_{M} = \{\underbrace{1, 10^{100}, 1, -10^{100}}_{\text{repeated $M$ times}}, \dots, 1, 10^{100}, 1, -10^{100}\}
+\end{gather*}
+which is
+\begin{gather}
+  \label{eq:sum}
+  \sum_{x \in S_{M}}x = 2M.
+\end{gather}
+In Python you can generate $S_{M}$ with the ``list multiplication'' operation
+\begin{minted}{python}
+M = 10000
+SM = [1, 1e100, 1, -1e100] * M
+\end{minted}
+(which generates a new list that consists of the concatenation of
+\mintinline{python}{M} copies of the original list).
+
+\begin{enuma}
+\item Convince yourself that \mintinline{python}{sum()} and
+  \mintinline{python}{numpy.sum()} give the wrong answer for
+  Eq.~\ref{eq:sum} and $M=10000$. Show the results. \bonus{1}
+\item Show that \mintinline{python}{math.fsum()} gives the correct
+  answer. \bonus{1}
+\item Implement an algorithm in a function
+  \mintinline{python}{stable_sum()} in a file \texttt{problem3.py}
+  that takes a sequence of numbers as input and calculates the sum
+  Eq.~\ref{eq:sum} correctly. You cannot use
+  \mintinline{python}{math.fsum()}. If you implement an algorithm from
+  the literature, cite your sources. Show the output of your algorithm
+  for the sum for $M=10,000$ and $M=10^{6}$. \bonus{8}
+\end{enuma}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
