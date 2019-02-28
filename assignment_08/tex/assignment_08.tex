@@ -1,0 +1,289 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm,amsbsy}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{courier}
+\usepackage{url}
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+
+
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{8}
+%
+%------------------------------------------------------------
+\newcommand{\anum}{0\anumber}
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (20 points total)}
+
+\noindent Due Tuesday, March 26, 2019, 11:59pm.
+
+\noindent
+%  \url{}
+\fbox{\parbox{\linewidth}{Submission is to your \textbf{private
+      GitHub repository}.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{cd} into your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username) and run the
+  update script \texttt{./scripts/update.sh} (replace
+  \emph{YourGitHubUsername} with your GitHub username):
+  \begin{minted}{bash}
+    cd  assignments-2019-YourGitHubUsername
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible or may otherwise be
+returned ungraded with 0 points.
+
+If you implement the function as specified you can run the tests in
+the file \texttt{Submission/test\_hw04.py} with \texttt{pytest}
+\begin{minted}{bash}
+  cd Submission
+  pytest -v test_outerplanets.py
+\end{minted}
+and all tests should pass. If you have errors, have a look at the
+output and try to figure out what is still not working. Having the
+tests pass is not a guarantee that you will get full points (but it is
+general a very good sign!).
+
+\textbf{Collaboration:} Up to three students may form a team and solve
+the homework together. Each student may submit the same solution to
+their own repo. \textbf{Add a text file \texttt{COLLABORATION.txt}} to
+the repository in which you
+\begin{itemize}
+\item list the names of all team members (last name, first name), and
+\item provide a brief statement ($<$ half a page) as to who in the
+  team contributed what to the solution
+\end{itemize}
+If you solved the problem on your own, just put your own name as the
+single name in \texttt{COLLABORATION.txt} and state in the file ``I
+solved and completed the homework by myself.''.
+
+\subsection{Discovery of Neptune (3-body problem) (20 points)}
+\label{sec:neptune}
+Historically, the planet Neptune was discovered because of its (small)
+observable influence on the orbit of Uranus. Neptune attracts Uranus
+and this leads to small changes in Uranus' orbital velocity. In this
+problem you are studying a simplified situation only containing the
+Sun, Uranus and Neptune.\footnote{For more background, see e.g.,
+  \emph{Computational Physics} 9.7.}
+
+Assume that to a first approximation that the orbits of Uranus and
+Neptune are circular (so that you can easily calculate the initial
+angular velocity)\footnote{In your simulation, do not enforce circular
+orbits, though. With the given parameters, orbits should turn out to
+be nearly circular.} and co-planar. The initial position is given by
+an angle $\theta$ relative to the $x$-axis and the distance $r$ from
+the sun, as listed in Table~\ref{tab:parameters}.
+
+\begin{table}[bt]
+  \centering
+  \begin{tabular}{lcccc}
+    \toprule
+    planet & mass ($M_{\text{sol}}$) & distance (AU) 
+           & orbital period (yr) & angular position (1690) $\theta$\\
+    \midrule
+    Sun    &      1 & --- & --- & ---\\
+    Uranus & $4.366244\times 10^{-5}$ & 19.1914 & 84.0110 &
+                                                            205.640$^{\circ}$\\
+    Neptune & $5.151389\times 10^{-5}$ & 30.0611 & 164.7901 & 
+                                                              288.380$^{\circ}$\\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameters for Uranus and Neptune}
+  \label{tab:parameters}
+\end{table}
+
+Calculate the variation in the angular velocity of Uranus
+$\Delta\omega_U(t)$ due to the influence of Neptune: Compare the
+instantaneous angular velocity\footnote{The angular velocity $\omega$
+  for circular motion is
+  \begin{gather*}
+    v = \frac{2\pi r}{T} = \omega r\\
+    \omega = \frac{2\pi}{T} = \frac{v}{r}
+  \end{gather*}
+  where $T$ is the period and $v$ the speed (velocity is normal to the
+  radial vector $\vec{r}$, $r$ is the distance from the center).}
+$\omega_U(t)$ to the one in the absence of Neptune, $\omega^0_U$:
+\begin{gather}
+  \Delta\omega_U(t) = \omega_U(t) - \omega^0_U\label{eq:DeltaOmega}
+\end{gather}
+by plotting $\Delta\omega_U(t)$ over $t$ and briefly comment on your
+result.
+
+\subsubsection{General considerations and requirements}
+\label{sec:general}
+
+\begin{itemize}
+\item Use astronomical units: AU for length (1 AU is the distance of
+  the earth from the sun), year for time, mass in terms of solar
+  masses (i.e.\ sun's mass $M = 1$) --- all as provided in
+  Table~\ref{tab:parameters}, gravitational constant (in
+  Eq.~\ref{eq:gravitation}) in AU: $G = 4\pi^{2}$
+\item Use the \emph{Velocity Verlet} algorithm\footnote{Hidden \BONUS
+    Try using another integration algorithm such as RK4 and compare
+    the results to the calculation with Velocity Verlet. \bonus{5}}
+  with a time step of 0.1 years to integrate the equations of motions
+  of Uranus and Neptune.
+\item The sun can be considered stationary ($M \gg m_U \approx m_N$).
+\item Analyze 160 years (almost one complete orbit of Neptune).
+\item Skeleton code is provided in \texttt{outerplanets.py}; you can
+  use it but you don't have to. However, you must write your code so
+  that
+  \begin{enumerate}
+  \item it can be imported as \texttt{import outerplanets}
+  \item it contains a function \texttt{integrate\_orbits(dt=0.1,
+      t\_max=320, coupled=True)} to do the integration; the function
+    has to return a tuple \texttt{time, r, v} (see
+    \texttt{outerplanets.py} for details).
+  \end{enumerate}
+  A test case \texttt{test\_outerplanets.py} is provided; you can run
+  \begin{minted}{bash}
+    pytest -v test_outerplanets.py
+  \end{minted}
+  and all tests should pass if you have done everything correctly.
+\item Also plot the orbits of Uranus and Neptune.
+\item The file \texttt{outerplanets.py} must be a separate file.
+  Provide the two figures as individual PDFs\footnote{If PDF does not
+    work for whatever reason, use the JPG format instead of PDF.} (use
+  \texttt{ax.figure.savefig("filename.pdf")}). Other descriptions and
+  code can be submitted as a notebook or in other suitable forms.
+\end{itemize}
+
+To calculate $\Delta\omega$ in Eq.~\ref{eq:DeltaOmega} you need to run
+your integration 
+\begin{enumerate}
+\item \emph{without} the interaction between Neptune and Uranus
+  (\texttt{coupled=False}) and 
+\item \emph{with} the gravitational interaction.
+\end{enumerate}
+
+\subsubsection{Angular velocity}
+\label{sec:velocity}
+You can calculate the instantaneous angular velocity as\footnote{The
+  code contains the function \texttt{omega()} to perform the
+  calculation.}
+\begin{gather*}
+  \omega(t) = \frac{v(t)}{r(t)}, \quad r=|\vec{r}|,\ v=|\vec{v}|
+\end{gather*}
+where position $\vec{r}(t)$ and velocity $\vec{v}(t)$ are determined
+from the integrator.
+
+\subsubsection{Interactions}
+\label{sec:F}
+
+This is a \emph{three-body} problem. You must compute the forces for
+Uranus and for Neptune, using the three interactions 
+\begin{enumerate}
+\item Uranus --- Sun, $\vec{F}_{U,S}$
+\item Neptune --- Sun, $\vec{F}_{N,S}$
+\item Uranus -- Neptune, $\vec{F}_{U,N}$
+\end{enumerate}
+Thus, for example, the force on Uranus is
+$\vec{F}_{U} = \vec{F}_{U,S} + \vec{F}_{U,N}$.
+%
+Newton's force law for gravitation is
+\begin{align}
+\label{eq:gravitation}
+\vec{F} &= -\frac{G m M}{r^2} \hat{\vec{r}}\\
+\hat{\vec{r}} &= \frac{1}{\sqrt{x^2 + y^2}} \left(\begin{array}{c} x
+                                                    \\
+                                                    y \end{array}\right) \notag
+\end{align}
+where $G$ is the gravitational constant, $m$ and $M$ are the masses of
+the two bodies, and $\vec{r}$ is the vector between the positions of
+the two bodies. Remember that Newton's third law states
+\begin{gather}
+  \label{eq:NewtonTwo}
+  \vec{F}_{12} = -\vec{F}_{21}.
+\end{gather}
+
+
+%Total Points: \arabic{TotalPoints}. Total Bonus: \arabic{TotalBonus}*
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
