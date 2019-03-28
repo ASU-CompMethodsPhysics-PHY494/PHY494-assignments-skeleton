@@ -1,0 +1,562 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm,amsbsy}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{courier}
+\usepackage{url}
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+
+
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{10}
+%
+%------------------------------------------------------------
+\newcommand{\anum}{\anumber}
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (35 points total)}
+
+\noindent Due Thursday, April 4, 2019, 1:30pm.
+
+\noindent
+%  \url{}
+\fbox{\parbox{\linewidth}{Submission is to your \textbf{private
+      GitHub repository}.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{cd} into your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username) and run the
+  update script \texttt{./scripts/update.sh} (replace
+  \emph{YourGitHubUsername} with your GitHub username):
+  \begin{minted}{bash}
+    cd  assignments-2019-YourGitHubUsername
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git add}
+  files and \texttt{git commit} changes. Files with output and code
+  should be named exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2019-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible or may otherwise be
+returned ungraded with 0 points.
+
+
+\paragraph{Proposal submission}
+
+To submit your proposal (see below in Problem \ref{sec:proposal} for
+detailed instructions on format and content), commit and push a PDF
+file inside the \texttt{assignment\_\anum{}/Submission} directory
+and name it \texttt{proposal.pdf}.
+
+\emph{Collaboration is not allowed} for this assignment. Each student
+must produce their own proposal.
+
+
+\paragraph{Project pitch}
+
+On \textbf{Thursday April 4, 2019}, you have your opportunity to
+\emph{pitch your project to the class} and \emph{attract a team of
+  students} to work with you on the project. \textbf{Only projects
+  that were pitched to the class can be chosen!} You will have 5
+Minutes in total to present you project in an exciting and succinct
+manner.
+
+If you want to \textbf{show slides} email a \textbf{PDF} to the
+instructor on the day before.\footnote{Also include the presentation
+  in your \texttt{assignment\_0\anumber{}/Submission} directory and
+  submit it; it will not be graded but it is very convenient to have
+  everything in one place and it will make it easy to get all
+  presentations.} All slides will be queued up on the instructor's
+laptop to allow for presentations with minimal down time for changing
+laptops. However, slides are not required for the pitch --- you can
+use the whiteboard or simply talk.
+
+
+\subsection{Square-root with Newton's method (15 points)}
+\label{sec:sqrt}
+
+The square root function\footnote{The symbol $\sqrt{\cdot}$ is
+  commonly used to denote the operation of $q$, so that
+  $q(x) \equiv \sqrt{x}$. For the following it is more useful to think
+  of the square root as a special function than just a calculation.}
+$q(x)$ can be \emph{defined} by the equation
+\begin{gather}
+  \label{eq:sqrtdef}
+  q(x)^{2} = x.
+\end{gather}
+The goal is to develop and to implement an \textbf{efficient algorithm
+to compute square roots}.
+
+The defining equation Eq.~\ref{eq:sqrtdef} can be rearranged as 
+\begin{align}
+  q(x)^{2} - x &= 0   \label{eq:sqrtroot}\\
+  q^{2} - x &= 0 \label{eq:q}\\
+  f_{x}(q) &= 0 \label{eq:fqx}
+\end{align}
+where $f_{x}(q) = q^{2} - x$ is now considered a function of the
+\emph{variable} $q$ and a given \emph{parameter} $x$. Finding the
+square root $q(x)$ amounts to finding the root of $f_{x}(q)$, i.e.,
+find that value $q$ that makes Eq.~\ref{eq:q} true for a given $x$.
+
+\begin{enuma}
+\item \label{li:NR} Use the iterative Newton-Raphson algorithm from the class to
+  implement a function \texttt{sqrt(x, tol=1e-6, Nmax=100)} in a
+  module \texttt{functions.py} that returns the square root of $x$ to
+  a tolerance of \texttt{tol} and uses at a maximum \texttt{Nmax}
+  iterations. If \texttt{Nmax} is exceeded print a warning message and
+  return \texttt{None}.\footnote{In your code you may \emph{not} use a
+    library square root function such as \texttt{math.sqrt} or
+    \texttt{numpy.sqrt} nor taking fractional powers such as
+    \texttt{x**0.5} or \texttt{numpy.power(x, 0.5)}.} Your code should
+  guess a good starting value for the Newton-Raphson scheme,
+  e.g,. $x/2$. 
+
+  In the Newton-Raphson scheme you have to calculate the update
+  $\Delta q$ to $q$ in order to obtain the new best guess for the root
+  \begin{gather}
+    \label{eq:update}
+    q \leftarrow q + \Delta q
+  \end{gather}
+  with
+  \begin{gather}
+    \label{eq:NR}
+    \Delta q = -\frac{f_{x}(q)}{f_{x}'(q)}
+  \end{gather}
+  In your code you may either use a finite difference scheme to
+  calculate $f_{x}'(q)$ \emph{or} (more efficiently), use the explicit
+  \emph{analytical derivative} $f_{x}'(q) = \frac{df_{x}}{dq}$
+  directly.\footnote{Using the analytical derivatives makes for a
+    handy algorithm to \emph{manually} calculate square roots and
+    indeed this is how Newton came up with the method. The algorithm
+    for computing the square root was also already known to the
+    ancient Babylonians.}
+
+  Your code must produce correct results, as tested with
+  \texttt{test\_functions.py}.\footnote{Some specific tests are
+    allowed to fail and they are marked with \texttt{x} or
+    \texttt{xfail} in the test output --- this is ok.} You can run
+  these tests yourself with
+\begin{minted}{bash}
+pytest -v test_functions.py
+\end{minted}
+  (in the same directory as your \texttt{functions.py}). \points{10}
+\item \label{li:results} Show results for
+  $x = 0, 0.456\times 10^{-8}, 10^{-3}, 0.1, 0.64, 0.99, 1, 5, 9, 12.5,
+  10^{3}, 1.2345 \times 10^{8}$
+  for a tolerance of $10^{-6}$. Put the results in a text file
+  \texttt{sqrt.txt}. The results should be arranged so that each line
+  contains $x$ and $q(x)$. \points{5}
+\item \label{li:analytical}\BONUS Do one Newton-Raphson step
+  analytically (using $f'_{x}(q)$) and come up with a handy way to
+  calculate approximations to square roots. Apply your approximation
+  formula to estimate the value of $\sqrt{2}$ and compare to the value
+  obtained from \texttt{numpy.sqrt()} or your calculator. \bonus{3}
+\end{enuma}
+
+\noindent
+Note: You don't have to submit any notebooks or written
+text for problems \ref{li:NR} and \ref{li:results}. It will be sufficient to submit
+\begin{itemize}
+\item \texttt{functions.py}
+\item \texttt{sqrt.txt}
+\end{itemize}
+If you are also solving the \emph{Bonus problem \ref{li:analytical}}
+then include a text document in PDF format to show your solution.
+
+
+
+
+
+\subsection{Proposal for the Final Project (20 points)}
+\label{sec:proposal}
+
+Write a short proposal for the \emph{Final Project}. You can come up
+with your own idea or base your proposal on the list of suggestions in
+the Appendix \ref{sec:suggestions}.\footnote{The Final Project, the
+  proposal, and the suggested projects were discussed in class on
+  2019-03-28. The slides are available from Canvas and in the PDF
+  \texttt{final\_overview\_2019.pdf} within the HW\anumber{} repository.}
+
+\subsubsection{Formatting [5 points]}
+\label{sec:formatting}
+
+The proposal must adhere to the following formatting restrictions:
+\begin{itemize}
+\item 1 page maximum, 0.75 pages minimum length
+\item minimum font size 11pt
+\item minimum margins 1" on all sides
+\item include
+  \begin{itemize}
+  \item \textbf{title}
+  \item \textbf{author} (your name)
+  \item sections with headings \textbf{Problem}, \textbf{Approach},
+    and \textbf{Objectives} (in this order); see below for what the
+    content should be.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Content [15 points]}
+\label{sec:content}
+
+The proposal should concisely describe what project you want to
+undertake and suggest a roadmap for how you are going to do it. It
+should be written in \emph{full English sentences}. Try to write clear
+and succinctly. If you can read it to someone not in the class and they
+get a general idea of what you want to do then you are on the right
+track.
+
+Specifically, you must address the following points in the individual
+sections:
+\begin{description}
+\item[Problem] Describe the problem to be solved: What is the
+  background, what is the overarching question. What is the physics
+  governing the problem, what are the important equations---show them,
+  if possible, but at a minimum name them. You can also comment
+  on why this is an interesting or difficult problem. 
+
+  Clearly define the overall goal of what you want to find out.
+
+  \emph{This should be between 30-50\% of your text.}
+\item[Approach] Describe \emph{how} you are going to reach your goal,
+  i.e., answer the overarching question. How are you going to solve
+  the equations that you identified in the Problem section, what kind
+  of calculations are needed, which algorithms are you going to use?
+  Do you need input parameters? Where can you get them from (show URLs
+  or sources if possible).
+
+  Be as concrete as possible: you want to convince your audience that
+  it is feasible to solve this problem and you have an idea how to
+  tackle it.
+
+  \emph{This should be between 30-50\% of your text.}
+  
+\item[Objectives] Use a numbered list to state 3--6 measurable
+  non-trivial outcomes that you need to achieve in order to reach the
+  overall goal. These are the milestones that you have to reach; they
+  are possibly dependent on each other. For each objective it must be
+  clear how to decide if you fulfilled it or not. Objectives are often
+  formulated in terms of deliverables such as ``Compile a list of
+  material parameters for walls, windows and doors (heat conduction
+  coefficients, typical thicknesses).''
+
+  Your grade will partially depend on achieving the objectives that
+  you set here.\footnote{The instructor will vet the objectives for any proposal
+  that is being used as the basis for a Final Project.}
+
+  \emph{This should take up your remaining space. The Objectives are
+    very important. Make sure to formulate them clearly. They will be
+    your own roadmap when you do the project.}  
+\end{description}
+
+
+\appendix
+
+\section{Suggested projects}
+\label{sec:suggestions}
+
+The following are suggestions that can be used to develop
+projects. The estimated difficulty level is only very approximate (1
+being easiest and 4 hardest).
+
+\subsection{Monte Carlo simulation of liquid argon}
+
+Argon can be simulated as a \emph{Lennard-Jones} fluid. Using random
+numbers and the \emph{Monte Carlo} (MC) approach we can simulate it at
+constant temperature.
+
+\begin{itemize}
+\item difficulty: 1--2
+\item implement basic MC for liquid Argon in the $NVT$ ensemble (see
+  \emph{Computational Physics} and/or Frenkel and Smit,
+  \emph{Understanding Molecular Simulations})
+\item use periodic boundary conditions with the minimum image
+  convention
+\item analyze at different $T$ and calculate the equation of state
+  $P(T, \rho)$; look for a phase transition
+\item visualize
+\item extra work: implement $NPT$ ensemble (with volume moves)
+\end{itemize}
+
+
+\subsection{Monte Carlo simulation of the Ising magnet}
+
+The classical application for Monte Carlo methods and one of the best
+known hard but analytically solvable problems in statistical
+mechanics.
+
+\begin{itemize}
+\item difficulty: 2 (2D), 3 (with 3D)
+\item implement MC sampling for the Ising spin system in 1D, 2D, and
+  possibly 3D
+\item see \emph{Computational Physics} or \emph{Computational
+    Modelling and visualization of physical systems}
+\item compute magnetization $M(T)$ and look for a phase transition
+\item visualize
+\item compare to the exact 2D result (see eg Kerson Huang,
+  \emph{Statistical Mechanics})
+\end{itemize}
+
+\subsection{Classical chaotic scattering}
+
+Inspired by pinball flippers: what is needed for chaotic scattering,
+i.e., small initial differences in an incoming beam lead to large
+differences in the scattered beam.
+
+\begin{itemize}
+\item Difficulty: 1
+\item Problem 9.4 in \emph{Computational Physics}
+\item particle interacting with ``4-peak'' potential
+\item integrate with RK4
+\item vary parameters and analyze cross section, assess sensitivity
+  to initial conditions
+\item visualize trajectories
+\end{itemize}
+
+
+
+\subsection{Quantum mechanical wave packet propagation}
+
+Simulate a realistic representation of particles interacting with
+various potentials and see first-hand how different quantum mechanical
+particles behave from classical ones.
+
+\begin{itemize}
+\item difficulty: 3
+\item solve the time-dependent Schr\"odinger equation for a wave
+  packet interacting with various potentials (e.g. using the explicit
+  Visscher algorithm described in \emph{Computational Physics} 22.2.1
+  or the Maestri/Askar \& Cakmak algorithm (\emph{Computational
+    Physics} 22.3))
+\item 1d
+  \begin{itemize}
+  \item step barrier (vary height compared to wave packet energy and
+    observe tunneling)
+  \item harmonic well
+  \item square well
+  \end{itemize}
+\item 2d: observe interference \emph{for particles}:
+  \begin{itemize}
+  \item single slit
+  \item double slit
+  \end{itemize}
+\item calculate transmission coefficient, wave
+  velocity, probability density on a screen behind slits
+\item visualize
+\end{itemize}
+
+
+\subsection{Fluid dynamics: 2D Navier-Stokes equations}
+
+The Navier-Stokes equations govern all of atmospheric and ocean
+physics, are needed to design airplanes and ships, and are fiendishly
+non-linear. But you can solve them with a computer:
+
+\begin{itemize}
+\item difficulty: 2--3
+\item Use \emph{Computational Physics} Chapter 25 with code as
+  starting point
+\item Solve the Navier-Stokes equations for 2d flow (using finite
+  difference with successive over-relaxation)
+\item investigate the velocity (flow) field and vorticity around various submerged
+  objects: 
+  \begin{itemize}
+  \item beam
+  \item sphere/cylinder
+  \item drop shape
+  \end{itemize}
+\item visualize
+\item vary Reynolds number: effect on vorticity?
+\end{itemize}
+
+
+
+\subsection{Dynamics of the solar system}
+
+Simulate the whole solar system including a number of comets.
+
+\begin{itemize}
+\item difficulty: 2
+\item simulate the solar system (classical gravitational interactions)
+  with velocity Verlet
+\item include sun and planets and comets such as Halley's comet or the
+  Shoemaker-Levy comet and let it crash into Jupiter
+\item find appropriate parameters (masses, positions,
+  periods)\footnote{See NASA HORIZONS to get data:
+    \url{http://ssd.jpl.nasa.gov/horizons.cgi}}
+\item investigate
+  \begin{itemize}
+  \item stability of the solar system
+  \item changes in orbits due to interactions (probably to weak to
+    easily notice?)
+  \item Do comets crash into planets?
+  \item extra: course of small space craft (e.g. a gravity assist
+    swing-by maneuver)
+  \end{itemize}
+\item extra: Make Jupiter like the sun and see how it changes the
+  solar system.
+\item extra: build the Tatooine system: binary star (two suns) and an
+  earth-like planet (``Tatooine''). Does the planet have stable
+  orbits? What would the days on the planet look like? Is there an
+  orbit that allows life?
+\item visualize with vpython\footnote{For a great example see the animated orrery
+    \url{http://mgvez.github.io/jsorrery/}}
+\end{itemize}
+
+
+
+\subsection{Wavelet analysis of Stock markets or Oil prices}
+
+Econophysics is a major employer of physicists\dots apply physical
+ideas to markets. If you can predict where the prices go you can make a
+lot of money\dots
+
+See for instance the paper ``Wavelet-based prediction of oil
+  prices'', S. Yousefi, I. Weinreich, D. Reinarz, \emph{Chaos,
+    Solitons and Fractals} \textbf{25} (2005), 265--275, doi:
+  \href{http://doi.org/10.1016/j.chaos.2004.11.015}{10.1016/j.chaos.2004.11.015}
+\begin{itemize}
+\item Difficulty: 4
+\item Implement wavelet analysis (Daubechies) for stock prices and
+  commodity prices time series. (see \emph{Computational Physics})
+\item Test how  well you can forecast known data: correlate forecast
+  vs actual data (which was not used for the wavelet analysis). How
+  does the correlation coefficient of the forecast with the real
+  timeseries vary as a function of the forecasting time interval?
+\end{itemize}
+Disclaimer: If you make money from this project, it's all yours.
+
+
+\subsection{Agent-based modelling of self-driving cars}
+\label{sec:cars}
+
+The future belongs to self-driving cars, which will communicate with
+each other. Once all cars are self-driving they might behave like a
+swarm of birds or bees or a school of fish: simple and local rules
+(such as keep a minimum distance, move if your neighbor moves, \dots)
+can lead to seemingly complex behavior in aggregate. Are self-driving
+cars going to improve traffic (e.g., increase traffic flow
+throughput)? How likely are accidents if small errors occur, i.e., how
+robust is the system?
+
+I heard something like the following in a TED talk:
+\begin{quotation}
+  ``Once cars can talk to each other, we will not need any traffic
+  lights or even restrictions on which side of the road they can
+  drive, it will look very organic, e.g. like water flowing.''
+\end{quotation}
+Is this true?
+
+\begin{itemize}
+\item difficulty: 2 (?)
+\item Use \emph{agent-based modelling} to simulate large numbers of
+  cars on a small street network. (Basically, many little car objects
+  that all follow their own rules in response to everything else in
+  the environment.)
+\item Analyse traffic flow as function of car density (and rules).
+\item Extension: introduce random errors or human drivers and study
+  robustness.
+\end{itemize}
+
+\subsection{Analysis of natural motion}
+\label{sec:motion}
+
+When you look at a film of a human walking, a cheeta or a horse
+racing, a bird flying, a fish swimming, or a snake slithering you get
+24 pictures per second that are all different and seem to show a very
+complicated process. However, using machine learning techniques such
+as \emph{singular value decomposition} (SVD --- see lecture 14!) these
+movements can often be decomposed into a small number of components and
+one gets a quantitative handle on the motion. (Example: Girdhar K,
+Gruebele M, Chemla YR (2015) The Behavioral Space of Zebrafish
+Locomotion and Its Neural Network Analog. \emph{PLoS ONE} 10(7):
+e0128668. doi:10.1371/journal.pone.0128668 )
+
+\begin{itemize}
+\item difficulty: 3--4 (?)
+\item record or obtain video of animal/human motion and process it
+  with Python
+\item use SVD to decompose motions and assess the complexity
+\item What are the most complex motions? Is human walking more complex
+  than a fish swimming or an eagle flying? Do all birds fly the same
+  way?
+\item Extra: Perform ``gait analysis/recognition'' (also see
+  \emph{Misson Impossible 5: Rogue Nation}\footnote{See
+    \url{https://www.youtube.com/watch?v=0iZ-nQ4yFn4} starting at
+    0:51.}): can the way you walk act as a unique finger print?
+\end{itemize}
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
