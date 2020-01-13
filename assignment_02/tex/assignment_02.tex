@@ -1,0 +1,303 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[letterpaper]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+% https://tex.stackexchange.com/a/340588
+\usepackage{tikz}
+\usepackage[edges]{forest}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{2}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\anum}{0\anumber}
+
+
+% dir trees from Guilherme Zanotelli
+% https://tex.stackexchange.com/a/340588
+\definecolor{foldercolor}{RGB}{124,166,198}
+
+\tikzset{pics/folder/.style={code={%
+    \node[inner sep=0pt, minimum size=#1](-foldericon){};
+    \node[folder style, inner sep=0pt, minimum width=0.3*#1, minimum height=0.6*#1, above right, xshift=0.05*#1] at (-foldericon.west){};
+    \node[folder style, inner sep=0pt, minimum size=#1] at (-foldericon.center){};}
+    },
+    pics/folder/.default={20pt},
+    folder style/.style={draw=foldercolor!80!black,top color=foldercolor!40,bottom color=foldercolor}
+}
+
+\forestset{is file/.style={edge path'/.expanded={%
+        ([xshift=\forestregister{folder indent}]!u.parent anchor) |- (.child anchor)},
+        inner sep=1pt},
+    this folder size/.style={edge path'/.expanded={%
+        ([xshift=\forestregister{folder indent}]!u.parent anchor) |- (.child anchor) pic[solid]{folder=#1}}, inner xsep=0.6*#1},
+    folder tree indent/.style={before computing xy={l=#1}},
+    folder icons/.style={folder, this folder size=#1, folder tree indent=3*#1},
+    folder icons/.default={12pt},
+}
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (51 points total)}
+
+\noindent Due Thursday, January 30, 2019, 11:59pm.
+
+\noindent Submit a PDF through Canvas (name it
+\texttt{\emph{lastname}\_\emph{firstname}\_hw\anumber.pdf}).\footnote{This
+is the last submission through Canvas. All future assignments will be
+submitted to your private git repository.}
+Homeworks must be legible or may otherwise be returned ungraded with 0
+points.
+
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.
+
+Note: In general, for full credit you need to (1) show the commands
+that you used and (2) answer the question. Sometimes you should also
+copy and paste output.
+
+\subsection{Python operators (6 points)}
+
+\begin{enuma}
+\item What does the following code output? What are the names of the four
+  mathematical operations that are carried out in lines 4--7? \points{4}
+  \begin{minted}[linenos]{python}
+    a = 5.0
+    b = 10
+    
+    result_1 = a + b
+    result_2 = a / b
+    result_3 = a ** b
+    result_4 = result_3 % result_1
+    
+    print(result_1, result_2, result_3, result_4)
+  \end{minted}
+\item What error does the following code produce and why? \points{2}
+  \begin{minted}{python}
+  x = 1.234
+  y = -0.5
+
+  result = (x*y - (-y/x)**0.5)/(1 + (y//x)**3)
+  \end{minted}
+\end{enuma}
+
+\subsection{Very Simple Temperature Calculator (13 points)}
+\label{sec:calculator}
+
+Write a Python program \texttt{addtemperatures.py} that adds a
+temperature difference in Fahrenheit, $\Delta\theta$, to an absolute
+temperature, given in Kelvin, $T$, and returns the sum in Kelvin. The
+program should
+\begin{itemize}
+\item ask the user for two floating point numbers $T$ (absolute
+  temperature in Kelvin) and $\Delta\theta$ (temperature difference in
+  degrees Fahrenheit) as input
+\item store the sum ``$T + \Delta\theta$'' in units of Kelvin (where
+  $\Delta\theta$ must be converted to Kelvin) in a variable named
+  \texttt{T\_total} and also print it.
+\end{itemize}
+The conversion of an absolute temperature from Fahrenheit to Kelvin is
+(written with numbers $T/\text{K}$ and
+$\theta/^{\circ}\text{F}$)\footnote{We use ``symbol/unit'' to indicate
+a number without the unit so that we can write equations where all
+units correctly balance. For instance, if $T=373$~K then $T/\text{K}$
+is the number 373. This approach is more precise than just saying
+``Take $T$ as the temperature in Kelvin and $\theta$ in Fahrenheit.''}
+\begin{gather}
+  \label{eq:conversion}
+  T/\text{K} = \frac{5}{9}(\theta/\text{$^{\circ}$F} - 32) + 273.15
+\end{gather}
+
+\begin{enuma}
+\item Derive an expression for $\Delta T = T_{2} - T_{1}$ as a
+  function of $\Delta \theta = \theta_{2} - \theta_{1}$ (where
+  $T_{2}$, $T_{1}$, $\theta_{2}$, and $\theta_{1}$ are arbitrary and
+  only introduced to make the connection to
+  Eq.~\ref{eq:conversion}). Show that the \emph{difference in Kelvin}
+  is 5/9-th of the difference in Fahrenheit, \points{3}
+  \begin{gather}
+    \label{eq:diff}
+    \Delta T/\text{K} = \frac{5}{9} \Delta \theta/\text{$^{\circ}$F}.
+  \end{gather}
+\item Use your result from the previous problem (i.e.,
+  Eq.~\ref{eq:diff}) to derive a mathematical expression to compute
+  the sum of $T$ and $\Delta\theta$. \points{2}  
+\item Write the \texttt{addtemperatures.py} program and copy and paste
+  the code. \points{7}
+\item Show the complete input and output (copy and paste) for the
+  input $\Delta\theta = 63^{\circ}\text{F}$ and $T =
+  265\,\text{K}$. \points{4}
+\end{enuma}
+
+
+\subsection{Version control with Git (9 points)}
+Keep your answers short, one or two sentences should be sufficient for
+questions \ref{li:gitinit}--\ref{li:gitpush}.
+\begin{enuma}
+\item \emph{Briefly} explain what a version control system such as Git
+  does and how it can help you. (For your answer, it is sufficient to
+  focus on three different aspects out of many --- choose the ones
+  that \emph{you} find most important.) \points{3}
+\item \label{li:gitinit}Explain the difference between \texttt{git init} and \texttt{git
+  clone}. \points{2}
+\item Explain the difference between \texttt{git add} and \texttt{git
+    commit}. \points{2}
+\item \label{li:gitpush} Explain the difference between \texttt{git commit} and
+  \texttt{git push} \points{2}
+\end{enuma}
+
+\subsection{Be the Git (10 points)}
+
+In this problem you should state various outcomes when a number of git
+commands are run on the  directory structure in Figure~\ref{fig:tree}
+(\emph{Documents} is the top-level directory, sub-directories are
+indicated by blue folder icons, files are text):\footnote{You can
+  pretend to be git or you can also create the directory structure
+  yourself and run the commands.}
+
+\begin{figure}[!h]
+  \centering
+  \begin{forest}
+    for tree={font=\sffamily, grow'=0, folder indent=.9em, folder
+      icons, edge=densely dotted} [Documents [planets [hoth.jpg, is
+    file] [tatooine.jpg, is file] [alderaan.jpg, is file] ] [vehicles
+    [ships [destroyer.txt, is file] [interceptor.txt, is file]]
+    [stations [deathstar.xxx, is file]]] [jedi\_locations.map, is
+    file] [shopping.txt, is file] [TODO, is file] ]
+  \end{forest}  
+  \caption{Part of the directory tree of user dvader. \emph{Documents}
+    is the top-level directory, sub-directories are indicated by blue
+    folder icons, files are just shown as text with their file name,
+    e.g., \emph{TODO} or \emph{hoth.jpg}.}
+  \label{fig:tree}
+\end{figure}
+
+User dvader decides (quite sensibly) to use version control, namely
+\textbf{git}, for his Documents. The \emph{Documents} directory was
+not under version control before.  The first set of commands that he
+performs is:
+\begin{minted}{bash}
+cd Documents
+git init
+git add shopping.txt
+git add planets/alderaan.jpg
+\end{minted}
+
+To answer the following question, create a table where you list the
+command that is being executed, the \emph{files in the git staging
+  area} and the \emph{files in the git repository}. After the initial
+commands, your table should look like this:
+
+\begin{center}
+  \small
+  \begin{tabular}{lp{0.3\linewidth}p{0.15\linewidth}}
+    \toprule
+    command & staging area & repository\\
+    \midrule
+    git init & & \\
+    git add shopping.txt & shopping.txt & \\
+    git add planets/alderaan.jpg & shopping.txt, planets/alderaan.jpg & \\
+    \bottomrule                           
+  \end{tabular}
+\end{center}
+
+List \emph{all} files that are in either staging area or repository,
+not just new ones. If there are no files (as in the repository during
+the first three \texttt{git} commands), leave the space empty.
+
+Add the table above to your submitted solution and continue it by
+listing all the files in the staging area and in the repository, after
+each of the following commands have been carried out:
+\begin{minted}{bash}
+git commit
+git add vehicles/stations
+git commit
+git add vehicles TODO
+git commit
+git rm planets/alderaan.jpg
+git add planets
+git commit
+\end{minted}
+
+
+
+\subsection{Your GitHub account (10 points)}
+
+As part of the last lesson you should have
+\href{http://asu-compmethodsphysics-phy494.github.io/ASU-PHY494/page2/#set-up-your-own-github-repositories}{set
+  up your own GitHub account} on \url{https://github.com} (if you have
+not done it yet, do it now!). What is your \textbf{GitHub username}?
+\begin{itemize}
+\item Write down your GitHub username. \points{10}
+\item Take the survey
+  \href{https://forms.gle/gt8PYQ931eU1ULFk9}{PHY
+    494: Your GitHub account}\footnote{In case the link to the survey
+    is not clickable: got to
+    \url{https://forms.gle/gt8PYQ931eU1ULFk9}. You must be logged
+    in with your ASU account. Log in to \url{https://my.asu.edu} first
+    and then go to the survey.} if you have not done so already.
+\end{itemize}
+
+
+
+
+%Total Points: \arabic{TotalPoints}. Total Bonus: \arabic{TotalBonus}*
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
