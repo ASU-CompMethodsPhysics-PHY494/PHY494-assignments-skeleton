@@ -1,0 +1,29 @@
+NAME  := assignment_04
+LATEX := $(NAME).tex
+PDF   := $(NAME).pdf
+AUX   := alice.txt starships.csv
+YEAR  := 2020
+
+SKELETON := $(HOME)/Documents/Teaching/ASU/CompPhys_PHY494/$(YEAR)/PHY494-assignments-skeleton/$(NAME)
+SUBMISSION := $(SKELETON)/Submission
+TEX := $(SKELETON)/tex
+
+%.pdf: %.tex
+	pdflatex -shell-escape $<
+	pdflatex -shell-escape $<
+
+.phony: all see copy
+
+all: $(PDF)
+
+see: $(PDF)
+	open $^
+
+copy: $(PDF) $(AUX)
+	-mkdir -p $(SKELETON)
+	-mkdir $(SUBMISSION) $(TEX)
+	cp $^ $(SKELETON)
+	cp code/*.py $(SUBMISSION)
+	cp $(LATEX) Makefile $(TEX)
+
+
