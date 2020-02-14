@@ -101,6 +101,8 @@ class TestFactorial:
             factorial(-1)
         except ValueError:
             raise AssertionError("This looks like math.factorial()!")
+        except:
+            pass
 
 class TestDoubleFactorial:
     def test_import_module(self):
