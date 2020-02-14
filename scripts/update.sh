@@ -57,7 +57,7 @@ fi
 
 
 echo "updating repository... git pull from ${REMOTE_NAME}"
-git pull ${REMOTE_NAME} master || die "Failed to pull from ${REMOTE_NAME}. ${CONTACT_MESSAGE}"
+git pull --no-edit ${REMOTE_NAME} master || die "Failed to pull from ${REMOTE_NAME}. ${CONTACT_MESSAGE}"
 
 
 echo "creating subdirectories (if any are missing)"
