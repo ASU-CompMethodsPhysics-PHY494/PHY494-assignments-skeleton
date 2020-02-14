@@ -39,13 +39,16 @@ if ! git remote get-url ${REMOTE_NAME} >/dev/null 2>&1; then
     #       we use the recursive/ours strategy that keeps any local file and
     #       discards remote changes. Unfortunately, this means that update.sh
     #       cannot be updated in this way.
+    #       If we failed a merge then we try to undo. https://stackoverflow.com/a/55192451
     git pull --allow-unrelated-histories -s recursive -X ours --no-edit  ${REMOTE_NAME} master || \
-	{ git merge --abort; \
+	{ git rev-list -1 MERGE_HEAD >/dev/null 2>&1 && git merge --abort ; \
+	  git remote rm ${REMOTE_NAME}; \
 	  die "Failed to merge histories. Contact the instructor and TA with a screen shot of ALL output from running $0" $?; }
     # ensure update.sh is updated
     git checkout ${REMOTE_NAME}/master ${UPDATESH} && \
 	git add ${UPDATESH} && \
-	git commit -m "updated ${UPDATESH} from ${REMOTE_NAME}" ${UPDATESH}
+	git commit -m "updated ${UPDATESH} from ${REMOTE_NAME}" ${UPDATESH} || \
+	    die "Failed updating ${UPDATESH}. Contact instructor/TA with screen shot of ALL output"
 
     set -x
 fi    
