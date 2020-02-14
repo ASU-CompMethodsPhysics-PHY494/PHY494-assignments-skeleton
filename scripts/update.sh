@@ -4,6 +4,9 @@
 #
 # Oliver Beckstein 2016-2018 placed into the public domain
 
+# With GitHub template repositories one needs to use --allow-unrelated-histories
+# at least once. https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template
+
 progname="$0"
 REMOTE_NAME="skeleton"
 REMOTE_URL="https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton.git"
@@ -14,15 +17,18 @@ function die () {
     exit $err
 }
 
-function set_remote () {
-    local NAME="$1" URL="$2"
-    if ! git remote get-url ${NAME} >/dev/null 2>&1; then
-	echo "Adding remote repository '${NAME}'."
-	git remote add ${NAME} ${URL}
-    fi
-}
+# first time
+# 1. set remote repo
+# 2. merge histories between student (template) and remote skeleton
 
-set_remote ${REMOTE_NAME} ${REMOTE_URL}
+if ! git remote get-url ${NAME} >/dev/null 2>&1; then
+    echo "Adding remote repository '${NAME}'."
+    git remote add ${REMOTE_NAME} ${REMOTE_URL}
+
+    echo "Merging histories for the first time..."
+    git pull --allow-unrelated-histories ${REMOTE_NAME} master || \
+	die "Failed to merge histories. Contact the instructor and TA with a screen shot of ALL output from running $0" $?
+fi    
     
 
 echo "updating repository... git pull from ${REMOTE_NAME}"
