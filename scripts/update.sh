@@ -2,7 +2,7 @@
 # Update the PHY 494 Assignment Repository with new
 # homeworks and data.
 #
-# Oliver Beckstein 2016-2018 placed into the public domain
+# Oliver Beckstein 2016-2020 placed into the public domain
 
 # With GitHub template repositories one needs to use --allow-unrelated-histories
 # at least once. https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template
@@ -14,9 +14,11 @@ REMOTE_URL="https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-
 # progname, from top dir
 UPDATESH="./scripts/$(basename $progname)"
 
+CONTACT_MESSAGE="Contact the instructor and TA with a screen shot of ALL output from running $0."
+
 function die () {
     local msg="$1" err=${2:-1}
-    echo "ERROR: ${msg}"
+    echo "ERROR: ${msg}."
     exit $err
 }
 
@@ -43,19 +45,19 @@ if ! git remote get-url ${REMOTE_NAME} >/dev/null 2>&1; then
     git pull --allow-unrelated-histories -s recursive -X ours --no-edit  ${REMOTE_NAME} master || \
 	{ git rev-list -1 MERGE_HEAD >/dev/null 2>&1 && git merge --abort ; \
 	  git remote rm ${REMOTE_NAME}; \
-	  die "Failed to merge histories. Contact the instructor and TA with a screen shot of ALL output from running $0" $?; }
+	  die "Failed to merge histories. ${CONTACT_MESSAGE}" $?; }
     # ensure update.sh is updated
     git checkout ${REMOTE_NAME}/master ${UPDATESH} && \
 	git add ${UPDATESH} && \
 	git commit -m "updated ${UPDATESH} from ${REMOTE_NAME}" ${UPDATESH} || \
-	    die "Failed updating ${UPDATESH}. Contact instructor/TA with screen shot of ALL output"
+	    die "Failed updating ${UPDATESH}. ${CONTACT_MESSAGE}"
 
     set -x
 fi    
 
 
 echo "updating repository... git pull from ${REMOTE_NAME}"
-git pull ${REMOTE_NAME} master || die "Failed to pull from ${REMOTE_NAME}. Ask your instructor/TA for help."
+git pull ${REMOTE_NAME} master || die "Failed to pull from ${REMOTE_NAME}. ${CONTACT_MESSAGE}"
 
 
 echo "creating subdirectories (if any are missing)"
