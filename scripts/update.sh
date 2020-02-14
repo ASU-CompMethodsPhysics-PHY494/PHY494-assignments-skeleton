@@ -34,6 +34,7 @@ if ! git remote get-url ${REMOTE_NAME} >/dev/null 2>&1; then
     git remote add ${REMOTE_NAME} ${REMOTE_URL}
 
     echo "Merging histories for the first time..."
+    set +x
     # NOTE: To avoid merge failures when students already have worked on files
     #       we use the recursive/ours strategy that keeps any local file and
     #       discards remote changes. Unfortunately, this means that update.sh
@@ -45,6 +46,8 @@ if ! git remote get-url ${REMOTE_NAME} >/dev/null 2>&1; then
     git checkout ${REMOTE_NAME}/master ${UPDATESH} && \
 	git add ${UPDATESH} && \
 	git commit -m "updated ${UPDATESH} from ${REMOTE_NAME}" ${UPDATESH}
+
+    set -x
 fi    
 
 
