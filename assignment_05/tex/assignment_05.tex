@@ -134,23 +134,12 @@ points. Bonus problems and bonus points are indicated with an asterisk
 The homework comes with starter code in the \texttt{Submission}
 directory. Edit and submit code as directed in the problems.
 
-The directory also includes a file \texttt{test\_hw5.py}. The test use
-the \href{https://scikit-image.org/}{scikit-image} package, which is
-not installed in anaconda by default. If you want to run \emph{all}
-tests then install this package first:\footnote{If you do not install
-  \textbf{scikit-image} then the tests will still run except that any
-  tests that use this package are skipped and you will not get
-  feedback on problems that involve creating an image file.}
-\begin{minted}{bash}
-conda install scikit-image
-\end{minted}
+The directory also includes a file \texttt{test\_hw5.py}. 
 You can use these tests to check if your solutions are correct:
 \begin{minted}{bash}
 pytest -v test_hw5.py
 \end{minted}
-(If you solved all coding problems, you should see ``9
-passed'';\footnote{If you did \emph{not} install \textbf{scikit-image}
-then two tests will show up as ``2 skipped'' with ``SKIPPED''.} if
+(If you solved all coding problems, you should see ``9 passed''; if
 you also solved the Bonus problem \ref{sec:numpyfuncs}\ref{li:zeta}
 you should see ``7 xpassed''. Otherwise you will be informed which
 problems failed.)

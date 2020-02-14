@@ -4,28 +4,7 @@ import importlib
 from numpy.testing import assert_almost_equal
 
 import numpy as np
-
-try:
-    import skimage, skimage.io
-    HAS_SKIMAGE = True
-except ImportError:
-    HAS_SKIMAGE = False
-
-    # make sure that students are notified at the end of tests
-    # (based on https://stackoverflow.com/a/38806934)
-    import atexit
-    def report():
-        print("\n" + 60*"*" + "\n"
-              "Some tests were SKIPPED because a package is missing that is needed\n"
-              "for testing.\n"
-              "For a complete test, install 'scikit-image' https://scikit-image.org/\n"
-              "with the following command:\n\n"
-              "   conda install scikit-image\n\n"
-              "You can then rerun the tests and should see no more SKIPPED tests.\n"
-              + 60*"*" + "\n"
-              )
-    atexit.register(report)
-
+import matplotlib.pyplot as plt
 
 class TestProblem1(object):
     @pytest.fixture(scope="class")
@@ -88,12 +67,10 @@ class TestProblem3a(object):
     def test_Y(self, solution):
         assert_almost_equal(solution.Y, np.sinc(np.arange(-6, 6, 0.2)))
 
-    @pytest.mark.skipif(not HAS_SKIMAGE,
-                        reason="Install scikit-image for this test to run")
     def test_png(self, filename="sinc.png"):
         # just make sure we can load it as an image file, not sure
         # how to do a real image comparison...
-        img = skimage.io.imread(filename)
+        img = plt.imread(filename)
         assert len(img.shape) == 3
 
 
@@ -119,11 +96,9 @@ class TestProblem3c(object):
     def test_zeta(self, solution, s, Nmax, result):
         assert_almost_equal(solution.zeta(s, Nmax), result)
 
-    @pytest.mark.skipif(not HAS_SKIMAGE,
-                        reason="Install scikit-image for this test to run")
     def test_png(self, filename="zeta.png"):
         # just make sure we can load it as an image file, not sure
         # how to do a real image comparison...
-        img = skimage.io.imread(filename)
+        img = plt.imread(filename)
         assert len(img.shape) == 3
 
