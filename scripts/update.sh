@@ -32,7 +32,7 @@ fi
     
 
 echo "updating repository... git pull from ${REMOTE_NAME}"
-git pull ${REMOTE_NAME} master
+git pull ${REMOTE_NAME} master || die "Failed to pull from ${REMOTE_NAME}. Ask your instructor/TA for help."
 
 topdir="$(git rev-parse --show-toplevel)" || die "Failed to get rootdir"
 cd "${topdir}" || die "Failed to get to the git root dir ${rootdir}"
