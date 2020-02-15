@@ -50,7 +50,7 @@ if ! git remote get-url ${REMOTE_NAME} >/dev/null 2>&1; then
     git checkout ${REMOTE_NAME}/master ${UPDATESH} && \
 	git add ${UPDATESH} && \
 	git commit -m "updated ${UPDATESH} from ${REMOTE_NAME}" ${UPDATESH} || \
-	    die "Failed updating ${UPDATESH}. ${CONTACT_MESSAGE}"
+	    echo "NOTE: ${UPDATESH} was not updated. Contact instructor/TA if problems persist."
 
     set +x
 fi    
