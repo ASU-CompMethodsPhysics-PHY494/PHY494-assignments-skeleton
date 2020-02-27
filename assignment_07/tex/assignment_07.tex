@@ -1,0 +1,341 @@
+%%% generic article type (pdf)latex file
+%%% use together with Makefile
+
+\documentclass[paper=letter]{scrartcl}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{eufrak}
+\usepackage{mathabx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+     colorlinks   = true,
+     urlcolor     = blue,
+     linkcolor    = red,
+     citecolor    = black
+}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{cprotect}
+\usepackage{minted}
+
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage[format=plain,labelsep=period,font=small,labelfont=bf]{caption}
+
+%------------------------------------------------------------
+% assignment
+%
+\newcommand{\anumber}{7}
+%
+%------------------------------------------------------------
+
+% hyperref https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#.5Chref
+\urlstyle{same}
+
+%% not working yet...
+\newcounter{TotalPoints}
+\newcounter{TotalBonus}
+
+\newcommand{\BONUS}{\textsc{Bonus: }}
+\newcommand{\bonus}[1]{\textbf{[bonus +#1*]}\stepcounter{TotalBonus}}
+\newcommand{\points}[1]{\textbf{[#1 points]}\stepcounter{TotalPoints}}
+\newenvironment{enuma}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+\newenvironment{enumi}{\begin{enumerate}[label=(\roman*)]}{\end{enumerate}}
+\newenvironment{solution}{\par\noindent\P{} }{\ \qedsymbol}
+
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\pd}[3][]{\left(\frac{\partial #2}{\partial #3}\right)_{#1}}
+
+\newcommand{\anum}{0\anumber}
+
+
+\begin{document}
+%\maketitle
+
+\setcounter{section}{\anumber}
+\addtocounter{section}{-1}
+\section{ --- PHY 494: Homework assignment (28 points total)}
+
+\noindent Due Thursday, March 5, 2020, 11:59pm.
+
+\noindent
+%  \url{}
+\fbox{\parbox{\linewidth}{Submission is to your \textbf{private
+      GitHub repository}.}}
+Read the following instructions carefully. Ask if anything is unclear.
+\begin{enumerate}
+\item \texttt{cd} into your assignment repository (change
+  \emph{YourGitHubUsername} to your GitHub username) and run the
+  update script \texttt{./scripts/update.sh} (replace
+  \emph{YourGitHubUsername} with your GitHub username):
+  \begin{minted}{bash}
+    cd  assignments-2020-YourGitHubUsername
+    bash ./scripts/update.sh
+  \end{minted}
+  It should create three subdirectories\footnote{If the script fails,
+    file an issue in the
+    \href{https://github.com/ASU-CompMethodsPhysics-PHY494/PHY494-assignments-skeleton/issues}{Issue
+      Tracker for PHY494-assignments-skeleton} and just create the
+    directories manually.} \texttt{assignment\_\anum/Submission},
+  \texttt{assignment\_\anum/Grade}, and
+  \texttt{assignment\_\anum/Work}.
+\item You can try out code in the \texttt{assignment\_\anum/Work}
+  directory but you don't have to use it if you don't want to. Your
+  grade with comments will appear in
+  \texttt{assignment\_\anum/Grade}.
+\item Create your solution in
+  \texttt{assignment\_\anum/Submission}. Use Git to \texttt{git
+    add} files and \texttt{git commit} changes.
+
+  You can create a PDF, a text file or Jupyter notebook inside the
+  \texttt{assignment\_\anum/Submission} directory as well as Python
+  code (if required). \textbf{Name your files \texttt{hw\anum.pdf} or
+    \texttt{hw\anum.txt} or \texttt{hw\anum.ipynb}}, depending on how
+  you format your work. Files with code (if requested) should be named
+  exactly as required in the assignment.
+\item When you are ready to submit your solution, do a final
+  \texttt{git status} to check that you haven't forgotten anything,
+  commit any uncommited changes, and \texttt{git push} to your GitHub
+  repository. Check on \emph{your} GitHub repository web
+  page\footnote{\texttt{https://github.com/ASU-CompMethodsPhysics-PHY494/assignments-2020-\emph{YourGitHubUsername}}}
+  that your files were properly submitted.
+
+  You can push more updates up until the deadline. Changes after the
+  deadline will not be taken into account for grading.
+\end{enumerate}
+Homeworks must be legible and intelligible or may otherwise be
+returned ungraded with 0 points.
+
+This assignment contains \textbf{bonus problems}. A bonus problem is
+optional. If you do it you get additional points that count towards
+this homework's total, although you can't get more than the maximum
+number of points. If you don't do it you can still get full
+points. Bonus problems and bonus points are indicated with an asterisk
+``*''.\footnote{There are currently no tests available for this homework.}
+
+% If you implement the functions as specified you can run the tests in
+% the file \texttt{Submission/test\_hw\anum.py} with \texttt{pytest}
+% \begin{minted}{bash}
+%   cd Submission
+%   pytest test_hw07.py
+% \end{minted}
+% and all tests should pass. If you have errors, have a look at the
+% output and try to figure out what is still not working. Having the
+% tests pass is not a guarantee that you will get full points (but it is
+% general a very good sign!). 
+
+\subsection{The Lennard-Jones potential (8 points)}
+\label{sec:LJ}
+
+The \emph{Lennard-Jones potential} is widely used to simulate the
+behavior of atoms and molecules. It models the interactions between
+two uncharged atoms as
+\begin{gather}
+  \label{eq:LJ}
+  V(r) = 4\epsilon\left[\left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^{6}\right].
+\end{gather}
+where $r$ is the distance between two atoms at positions $\vec{r}_{1}$
+and $\vec{r}_{2}$
+\begin{gather}
+  \label{eq:distance}
+  r = \sqrt{\vec{r}\cdot\vec{r}} \quad\text{with}\quad \vec{r} :=
+  \vec{r}_{2} - \vec{r}_{1}
+\end{gather}
+(and $\vec{r}$ is the distance vector).  The LJ potential describes
+the atomic van der Waals interactions. They consist of an attractive
+term (the $-(\sigma/r)^{6}$ term) due to London dispersion forces
+(spontaneous fluctuations in the electron clouds lead to attractive
+fluctuating dipoles), and a strongly repulsive term (the
+$+(\sigma/r)^{12}$), which crudely models the fact that atoms cannot
+come arbitrarily close (due to the quantum mechanical Pauli exclusion
+principle).
+
+The LJ potential Eq.~\ref{eq:LJ} has two parameters: $\epsilon$ is an
+energy and sets the energy scale and is related to the attractive
+strength whereas $\sigma$ is a length and sets the length scale and
+range of the interaction. Parameters for the noble gas \textbf{argon}
+in the liquid state are
+
+\begin{center}
+  \begin{tabular}{ccc}
+    \toprule
+    parameter & value & unit\\
+    \midrule
+    $\epsilon$ & $1.654 \times 10^{-21}$ & J\\
+    $\sigma$ & $3.41\times 10^{-10}$& m\\
+    \bottomrule                        
+  \end{tabular}
+\end{center}
+For numerical convenience, we want to use units close to 1 so for all
+further numerical evaluations we use
+\begin{center}
+  \begin{tabular}{ccc}
+    \toprule
+    parameter & value & unit\\
+    \midrule
+    $\epsilon/k_{B}$ & $119.8$ & K\\
+    $\sigma$ & $0.341$& nm\\
+    \bottomrule                        
+  \end{tabular}
+\end{center}
+Note that we express $\epsilon$ as a temperature by dividing with the
+Boltzmann constant
+$k_{B} = 1.3806488 \times
+10^{-23}\,\text{J}\cdot\text{K}^{-1}$. Temperature is a direct measure
+of energy and in this case it is convenient to use Kelvin as a measure
+of energy instead of Joule. The length $\sigma$ is expressed in nano
+meters ($1\,\text{nm} = 1\times 10^{-9}\,\text{m}$).
+
+In the following, use Python (with \texttt{numpy}) for all numerical
+calculations and \texttt{matplotlib} for all plotting.
+\begin{enuma}
+\item \label{li:plot} Plot the Lennard-Jones potential Eq.~\ref{eq:LJ}
+  for argon in the range $0 < r \leq 4\sigma$ \points{3}
+  \begin{itemize}
+  \item Use a sufficiently large number of $r$ values for plotting so
+    that all details of $V(r)$ are visible in the plot\footnote{For
+      instance, \texttt{np.linspace(1e-15, 4*sigma, 100)}}. 
+  \item Set the display limits of the energy ($y$) axis to range from
+    $-120$~K to $+100$~K.\footnote{Generate the plot with \texttt{ax =
+        plt.subplot(1, 1, 1)}, then plot with \texttt{ax.plot(...)} and
+      set the limits with \texttt{ax.set\_ylim(-120, 100)}.} Your plot
+    should clearly show the smallest value of $V_{\text{LJ}}$ and
+    indicate the behavior for small and large $r$.
+  \item Label your axes with the quantity plotted and the
+    units.\footnote{For example, for the $x$-axis you may use
+      \texttt{ax.set\_xlabel(r"distance \$r\$ (nm)")}.}
+  \end{itemize}
+\item \label{li:analytical} The \emph{force} along the direction of
+  $\vec{r}$ is
+  \begin{gather}
+    \label{eq:force}
+    F = -\frac{dV(r)}{dr}.
+  \end{gather}
+  Calculate the Lennard-Jones force $F(r)$
+  \emph{analytically}.\footnote{$F(r)$ is the force that one particle
+    exerts on the other particle when they are at a distance $r$.}
+
+  Plot $F(r)$ over the same range of $r$ values as in
+  \ref{li:plot}. Adjust the force-axis limits so that you can clearly
+  show the minimum in $F(r)$. \points{5}
+\item \BONUS Analytically calculate the general value $r_{\text{min}}$
+  at which the Lennard-Jones potential Eq.~\ref{eq:LJ} obtains a
+  minimum and calculate its minimal value
+  $V_{\text{LJ}}(r_{\text{min}}) = \min_{r} V_{\text{LJ}}(r)$. First
+  express your answers in terms of $\epsilon$ and $\sigma$ and then
+  calculate the specific values for argon. \bonus{2}
+\end{enuma}
+
+\subsection{Molecular dynamics simulation of the Argon dimer (20 points)}
+\label{sec:argonmd}
+
+At sufficiently low temperature, two atoms of the noble gas argon are
+weakly bound to each other and form a \emph{dimer}. The interaction
+between two argon atoms with mass $m$ each can be approximated by the
+Lennard-Jones potential (Eq.~\ref{eq:LJ}).
+
+Simulate the dynamics of the weakly bound argon dimer
+Ar\textsubscript{2} by solving Newton's equations of motion for the
+interatomic distance $r$
+\begin{gather}
+  \label{eq:eom}
+  \frac{d^2 r}{dt^2} = \mu^{-1} F_{LJ}(r).
+\end{gather}
+with the reduced mass $\mu = m/2$. (We can treat this as a 1-body, 1D
+problem because we can reduce the 2-body problem to an effective
+1-body problem with the reduced mass
+\begin{gather}
+  \label{eq:mu}
+  \mu = \frac{m_{1} m_{2}}{m_{1} + m_{2}} = \frac{m^{2}}{2m} = \frac{1}{2}m
+\end{gather}
+and if we start with zero total angular momentum then the only motion
+is along the connecting vector and the problem can be fully described
+in in 1D).
+
+Use as parameters for argon
+\begin{itemize}
+\item
+  $\epsilon = 120\,\text{K} \cdot k_B =
+  0.99774\,\text{kJ}\cdot\text{mol}^{-1}$ (use
+  $\text{kJ}\cdot\text{mol}^{-1}$ as units, see below)
+\item $\sigma = 0.341\,\text{nm}$ 
+\item $m = 39.948\,\text{u}$ (in atomic mass units,
+  $1\,\text{u} = 1.660539040 \times 10^{-27}\,\text{kg} =
+  1\,\text{g}\cdot\text{mol}^{-1}$)
+\end{itemize}
+When using these units for energy, length, and mass then for
+consistency the unit of time \emph{must} be pico seconds (ps,
+$10^{-12}$ seconds).\footnote{Using the atomic mass unit in
+  conjunction with nm/ps as unit of velocity directly yields energies
+  in kJ/mol, i.e.
+  $\frac{1}{2} m v^{2} = \frac{1}{2} \times 1\,\text{u} \times
+  (1\,\text{nm}\cdot\text{ps}^{-1})^2 =
+  1\,\text{kJ}\cdot\text{mol}^{-1}$.}
+
+For the following problems you can use the provided module
+\texttt{integrators.py}, which was developed in the lesson on ODEs,
+without having to specifically note this. If you use the module,
+include it in your submission. You may also modify the module and
+include it as part of your solution.
+
+\begin{enuma}
+\item \label{li:euler} Use \emph{Euler's method} to simulate the dynamics for
+  $0 \leq t \leq 10\,\text{ps}$ with a time step
+  $\Delta t = 1\times 10^{-4}\,\text{ps}$. Use as initial conditions
+  \begin{itemize}
+  \item $r(t=0) = 0.38276$ (nm) 
+  \item $v(t=0) = 0.18$ (nm/ps).
+  \end{itemize}
+  Include all your functions in in a file \texttt{problem2.py} (which
+  may itself import \texttt{integrators.py} if necessary).
+  \begin{enumi}
+  \item Create a function \mintinline{python}{F_LJ(r)} that returns
+    the force (Eq.~\ref{eq:force}) at distance $r$ due to the
+    Lennard-Jones potential Eq.~\ref{eq:LJ} for Argon. The units of
+    this problem should be used (nm, kJ/mol, kJ/(nm mol) for
+    force). \points{2}
+  \item Create a function \mintinline{python}{dimer_md(r0, v0, t_max,
+      dt, mass)} that takes the initial distance of the atoms $r(t=0)$
+    (in nm) and initial relative velocity $v(t=0)$ (in nm/ps) as well
+    as the maximum time $t_{\text{max}}$, the integration timestep
+    $\Delta t$, and the mass as input and returns a tuple consisting
+    of \mintinline{python}{(t, y)}, i.e., a numpy array of all the
+    times $t$ and a numpy array consisting of an array of the ODE
+    standard form of the dependent variables
+    $\mathbf{y}(t) = (r(t), v(t))$, i.e., the positition and velocity
+    at each timestep. \points{10}
+  \item Plot $r(t)$ and show the plot; include axes labels with
+    units. \points{2}
+  \item Describe briefly what kind of motion the argon dimer
+    undergoes. \points{1}
+  \end{enumi}
+\item \label{li:error} Analyze the error in the total energy $E$ by
+  computing the total energy from potential $U$ and kinetic energy
+  $T_{\text{kin}}$.
+  \begin{enumi}
+  \item Create a function \mintinline{python}{U_LJ(r)} that calculates
+    the value of the Lennard-Jones potential Eq.~\ref{eq:LJ} for argon
+    in the units of this problem (i.e., input nm, output
+    kJ/mol). \points{2}
+  \item Plot (1) $E(t)$, $U(t)$, $T_{\text{kin}}(t)$ and (2) the
+    decadic logarithm of the relative error in the total energy, i.e.,
+    \begin{gather*}
+      \log_{10}\left|\frac{E(t)}{E(t=0)} - 1 \right|.
+    \end{gather*}
+    Label the graph axes with appropriate units. \points{2}
+  \item Comment on your graph. \points{1}
+  \end{enumi}
+\item \BONUS Perform the MD in \ref{li:euler} with the \emph{semi-implicit
+    Euler} algorithm (create a function
+  \mintinline{python}{dimer_md_semiimplicit_Euler()}) and perform the error analysis
+  as in \ref{li:error}. \bonus{10}
+\end{enuma}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
